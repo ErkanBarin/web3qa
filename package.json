@@ -14,7 +14,7 @@
     "perf": "echo 'perf script pending Lighthouse integration' && exit 0"
   },
   "dependencies": {
-    "next": "14.1.0",
+    "next": "13.5.11",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "lucide-react": "0.395.0"
