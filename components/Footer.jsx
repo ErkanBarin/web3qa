@@ -8,6 +8,7 @@ export default function Footer() {
         <nav aria-label="Footer" className="text-xs text-gray-500 dark:text-gray-400 flex gap-4">
           <a href="/guides" className="hover:underline">Guides</a>
           <a href="/glossary" className="hover:underline">Glossary</a>
+          <a href="/about" className="hover:underline">About Me</a>
           <span className="opacity-60">Sitemap (coming)</span>
         </nav>
       </div>

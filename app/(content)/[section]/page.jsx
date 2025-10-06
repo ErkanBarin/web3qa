@@ -1,5 +1,5 @@
 import React from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import EmptyState from '../../../components/EmptyState.jsx';
 import { normalizeChain, normalizeTag } from '../../../lib/filters.js';
 import { getAllBySection } from '../../../lib/contentlayer-helpers.js';
@@ -7,7 +7,7 @@ import ListingFilters from '../../../components/ListingFilters.jsx';
 
 const SECTIONS = ['guides','tools','concepts','patterns','tutorials','glossary','references','faq'];
 const CHAINS = ['ethereum','arbitrum','optimism','polygon','base','avalanche'];
-const TAGS = ['testing','security','tooling','guides','glossary','architecture','best-practices','performance'];
+const TAGS = ['testing','security','tooling','guides','glossary','architecture','best-practices','performance','about','qa','web3','blockchain'];
 
 function normalize(value, list) {
   if (!value) return null;
