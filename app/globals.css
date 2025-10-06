@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Typography adjustments */
+.prose {
+  max-width: 70ch;
+}
+
+/* Skip link utility */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateY(-150%);
+  background: #000;
+  color: #fff;
+  padding: 0.5rem 1rem;
+  z-index: 50;
+}
+.skip-link:focus {
+  transform: translateY(0);
+}

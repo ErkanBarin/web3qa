@@ -1,0 +1,30 @@
+{
+  "title": "Experimental Gas Profiler",
+  "description": "An experimental tool for profiling and optimizing gas usage in Ethereum smart contracts.",
+  "section": "tools",
+  "chain": "ethereum",
+  "tags": [
+    "tooling"
+  ],
+  "draft": true,
+  "body": {
+    "raw": "\n# Experimental Gas Profiler (Draft)\n\nThis draft document is intentionally missing a description field and marked draft to exercise validation exclusion logic.\n",
+    "code": "var Component=(()=>{var d=Object.create;var o=Object.defineProperty;var f=Object.getOwnPropertyDescriptor;var x=Object.getOwnPropertyNames;var p=Object.getPrototypeOf,u=Object.prototype.hasOwnProperty;var g=(t,e)=>()=>(e||t((e={exports:{}}).exports,e),e.exports),h=(t,e)=>{for(var i in e)o(t,i,{get:e[i],enumerable:!0})},a=(t,e,i,s)=>{if(e&&typeof e==\"object\"||typeof e==\"function\")for(let r of x(e))!u.call(t,r)&&r!==i&&o(t,r,{get:()=>e[r],enumerable:!(s=f(e,r))||s.enumerable});return t};var j=(t,e,i)=>(i=t!=null?d(p(t)):{},a(e||!t||!t.__esModule?o(i,\"default\",{value:t,enumerable:!0}):i,t)),_=t=>a(o({},\"__esModule\",{value:!0}),t);var l=g((C,c)=>{c.exports=_jsx_runtime});var b={};h(b,{default:()=>M,frontmatter:()=>D});var n=j(l()),D={title:\"Experimental Gas Profiler\",description:\"An experimental tool for profiling and optimizing gas usage in Ethereum smart contracts.\",section:\"tools\",chain:\"ethereum\",tags:[\"tooling\"],draft:!0};function m(t){let e=Object.assign({h1:\"h1\",p:\"p\"},t.components);return(0,n.jsxs)(n.Fragment,{children:[(0,n.jsx)(e.h1,{children:\"Experimental Gas Profiler (Draft)\"}),`\n`,(0,n.jsx)(e.p,{children:\"This draft document is intentionally missing a description field and marked draft to exercise validation exclusion logic.\"})]})}function E(t={}){let{wrapper:e}=t.components||{};return e?(0,n.jsx)(e,Object.assign({},t,{children:(0,n.jsx)(m,t)})):m(t)}var M=E;return _(b);})();\n;return Component;"
+  },
+  "_id": "tools/ethereum/experimental-tool.mdx",
+  "_raw": {
+    "sourceFilePath": "tools/ethereum/experimental-tool.mdx",
+    "sourceFileName": "experimental-tool.mdx",
+    "sourceFileDir": "tools/ethereum",
+    "contentType": "mdx",
+    "flattenedPath": "tools/ethereum/experimental-tool"
+  },
+  "type": "Article",
+  "slug": "ethereumexperimental-tool",
+  "normalizedSection": "tools",
+  "normalizedTags": [
+    "tooling"
+  ],
+  "isValid": true,
+  "contentHash": "726f8cb30efc9062c6ed46298bb60e9db4108053b5318b8e220a7d2d84524395"
+}

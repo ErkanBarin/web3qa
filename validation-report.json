@@ -1,0 +1,15 @@
+{
+  "generatedAt": "2025-10-06T10:01:52.698Z",
+  "contentHash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "totals": {
+    "items": 0,
+    "published": 0,
+    "excluded": 0,
+    "errors": 0,
+    "warnings": 0
+  },
+  "errors": [],
+  "warnings": [],
+  "excluded": [],
+  "allowedSecrets": []
+}

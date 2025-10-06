@@ -1,0 +1,35 @@
+{
+  "title": "Intro to Testing Smart Contracts",
+  "description": "This guide introduces foundational approaches to testing EVM smart contracts covering unit tests, property fuzzing, and security invariant patterns.",
+  "section": "guides",
+  "chain": "ethereum",
+  "tags": [
+    "testing",
+    "best-practices",
+    "performance"
+  ],
+  "lastUpdated": "2025-10-01T00:00:00.000Z",
+  "draft": false,
+  "body": {
+    "raw": "\nimport React from 'react';\n\n# Intro to Testing Smart Contracts\n\nTesting smart contracts mitigates risk, documents intent, and enables safe iteration.\n\n## Approaches\n\n1. Unit tests: assert deterministic logic.\n2. Property-based / fuzz tests: explore unexpected inputs.\n3. Invariant monitoring: ensure system constraints always hold.\n\n{/* Example code placeholder */}\n\n## Next Steps\n\nContinue with deeper guides on gas profiling and formal verification.\n",
+    "code": "var Component=(()=>{var g=Object.create;var r=Object.defineProperty;var f=Object.getOwnPropertyDescriptor;var x=Object.getOwnPropertyNames;var j=Object.getPrototypeOf,_=Object.prototype.hasOwnProperty;var o=(n,t)=>()=>(t||n((t={exports:{}}).exports,t),t.exports),y=(n,t)=>{for(var i in t)r(n,i,{get:t[i],enumerable:!0})},c=(n,t,i,a)=>{if(t&&typeof t==\"object\"||typeof t==\"function\")for(let s of x(t))!_.call(n,s)&&s!==i&&r(n,s,{get:()=>t[s],enumerable:!(a=f(t,s))||a.enumerable});return n};var d=(n,t,i)=>(i=n!=null?g(j(n)):{},c(t||!n||!n.__esModule?r(i,\"default\",{value:n,enumerable:!0}):i,n)),b=n=>c(r({},\"__esModule\",{value:!0}),n);var p=o((T,l)=>{l.exports=_jsx_runtime});var m=o((D,h)=>{h.exports=React});var z={};y(z,{default:()=>w,frontmatter:()=>C});var e=d(p()),I=d(m()),C={title:\"Intro to Testing Smart Contracts\",description:\"This guide introduces foundational approaches to testing EVM smart contracts covering unit tests, property fuzzing, and security invariant patterns.\",section:\"guides\",chain:\"ethereum\",tags:[\"testing\",\"best-practices\",\"performance\"],lastUpdated:new Date(17592768e5),draft:!1};function u(n){let t=Object.assign({h1:\"h1\",p:\"p\",h2:\"h2\",ol:\"ol\",li:\"li\"},n.components);return(0,e.jsxs)(e.Fragment,{children:[(0,e.jsx)(t.h1,{children:\"Intro to Testing Smart Contracts\"}),`\n`,(0,e.jsx)(t.p,{children:\"Testing smart contracts mitigates risk, documents intent, and enables safe iteration.\"}),`\n`,(0,e.jsx)(t.h2,{children:\"Approaches\"}),`\n`,(0,e.jsxs)(t.ol,{children:[`\n`,(0,e.jsx)(t.li,{children:\"Unit tests: assert deterministic logic.\"}),`\n`,(0,e.jsx)(t.li,{children:\"Property-based / fuzz tests: explore unexpected inputs.\"}),`\n`,(0,e.jsx)(t.li,{children:\"Invariant monitoring: ensure system constraints always hold.\"}),`\n`]}),`\n`,`\n`,(0,e.jsx)(t.h2,{children:\"Next Steps\"}),`\n`,(0,e.jsx)(t.p,{children:\"Continue with deeper guides on gas profiling and formal verification.\"})]})}function v(n={}){let{wrapper:t}=n.components||{};return t?(0,e.jsx)(t,Object.assign({},n,{children:(0,e.jsx)(u,n)})):u(n)}var w=v;return b(z);})();\n;return Component;"
+  },
+  "_id": "guides/ethereum/intro-to-testing.mdx",
+  "_raw": {
+    "sourceFilePath": "guides/ethereum/intro-to-testing.mdx",
+    "sourceFileName": "intro-to-testing.mdx",
+    "sourceFileDir": "guides/ethereum",
+    "contentType": "mdx",
+    "flattenedPath": "guides/ethereum/intro-to-testing"
+  },
+  "type": "Article",
+  "slug": "ethereumintro-to-testing",
+  "normalizedSection": "guides",
+  "normalizedTags": [
+    "best-practices",
+    "performance",
+    "testing"
+  ],
+  "isValid": true,
+  "contentHash": "22caa90dd0aa0f32943f5f8c314e7ae91132061da31b943d59e72bc150711f88"
+}

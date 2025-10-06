@@ -1,0 +1,33 @@
+{
+  "name": "web3qa-site-shell",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test:unit": "vitest run",
+    "test:unit:watch": "vitest",
+    "test:e2e": "playwright test",
+    "validate": "node scripts/validate-content.mjs",
+    "perf": "echo 'perf script pending Lighthouse integration' && exit 0"
+  },
+  "dependencies": {
+    "next": "14.1.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "lucide-react": "0.395.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.47.2",
+    "@tailwindcss/typography": "0.5.10",
+    "autoprefixer": "10.4.19",
+    "contentlayer": "0.3.4",
+    "next-contentlayer": "0.3.4",
+    "postcss": "8.4.38",
+    "tailwindcss": "3.4.3",
+    "vitest": "1.6.0",
+    "axe-core": "4.9.0"
+  }
+}

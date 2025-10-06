@@ -1,0 +1,32 @@
+{
+  "title": "Fuzzing",
+  "description": "Fuzzing is an automated testing technique that generates many pseudo-random inputs to explore unexpected execution paths and uncover edge case bugs.",
+  "section": "glossary",
+  "tags": [
+    "testing",
+    "glossary"
+  ],
+  "lastUpdated": "2025-10-02T00:00:00.000Z",
+  "draft": false,
+  "body": {
+    "raw": "\n# Fuzzing\n\nFuzzing supplies a broad distribution of inputs to a target function or contract to surface crashes, assertion failures, and invariant violations that handcrafted tests might miss.\n\n## Benefits\n\n- Discovers edge cases\n- Increases confidence in validation logic\n- Complements unit and integration tests\n\n## Related Terms\n\nProperty-based testing, invariant checking.\n",
+    "code": "var Component=(()=>{var u=Object.create;var a=Object.defineProperty;var h=Object.getOwnPropertyDescriptor;var g=Object.getOwnPropertyNames;var p=Object.getPrototypeOf,m=Object.prototype.hasOwnProperty;var f=(e,n)=>()=>(n||e((n={exports:{}}).exports,n),n.exports),x=(e,n)=>{for(var i in n)a(e,i,{get:n[i],enumerable:!0})},o=(e,n,i,r)=>{if(n&&typeof n==\"object\"||typeof n==\"function\")for(let s of g(n))!m.call(e,s)&&s!==i&&a(e,s,{get:()=>n[s],enumerable:!(r=h(n,s))||r.enumerable});return e};var z=(e,n,i)=>(i=e!=null?u(p(e)):{},o(n||!e||!e.__esModule?a(i,\"default\",{value:e,enumerable:!0}):i,e)),j=e=>o(a({},\"__esModule\",{value:!0}),e);var d=f((D,c)=>{c.exports=_jsx_runtime});var F={};x(F,{default:()=>v,frontmatter:()=>_});var t=z(d()),_={title:\"Fuzzing\",description:\"Fuzzing is an automated testing technique that generates many pseudo-random inputs to explore unexpected execution paths and uncover edge case bugs.\",section:\"glossary\",tags:[\"testing\",\"glossary\"],lastUpdated:new Date(17593632e5),draft:!1};function l(e){let n=Object.assign({h1:\"h1\",p:\"p\",h2:\"h2\",ul:\"ul\",li:\"li\"},e.components);return(0,t.jsxs)(t.Fragment,{children:[(0,t.jsx)(n.h1,{children:\"Fuzzing\"}),`\n`,(0,t.jsx)(n.p,{children:\"Fuzzing supplies a broad distribution of inputs to a target function or contract to surface crashes, assertion failures, and invariant violations that handcrafted tests might miss.\"}),`\n`,(0,t.jsx)(n.h2,{children:\"Benefits\"}),`\n`,(0,t.jsxs)(n.ul,{children:[`\n`,(0,t.jsx)(n.li,{children:\"Discovers edge cases\"}),`\n`,(0,t.jsx)(n.li,{children:\"Increases confidence in validation logic\"}),`\n`,(0,t.jsx)(n.li,{children:\"Complements unit and integration tests\"}),`\n`]}),`\n`,(0,t.jsx)(n.h2,{children:\"Related Terms\"}),`\n`,(0,t.jsx)(n.p,{children:\"Property-based testing, invariant checking.\"})]})}function b(e={}){let{wrapper:n}=e.components||{};return n?(0,t.jsx)(n,Object.assign({},e,{children:(0,t.jsx)(l,e)})):l(e)}var v=b;return j(F);})();\n;return Component;"
+  },
+  "_id": "glossary/fuzzing.mdx",
+  "_raw": {
+    "sourceFilePath": "glossary/fuzzing.mdx",
+    "sourceFileName": "fuzzing.mdx",
+    "sourceFileDir": "glossary",
+    "contentType": "mdx",
+    "flattenedPath": "glossary/fuzzing"
+  },
+  "type": "Article",
+  "slug": "fuzzing",
+  "normalizedSection": "glossary",
+  "normalizedTags": [
+    "glossary",
+    "testing"
+  ],
+  "isValid": true,
+  "contentHash": "daf2be808436fde3bfe8708401f36cc00a77b414320a6a73fd84fb16d599ffdb"
+}
