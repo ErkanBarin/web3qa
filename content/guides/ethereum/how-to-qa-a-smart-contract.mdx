@@ -160,9 +160,9 @@ Now, open your `package.json` file and add an `analyze` script.
 
 ```json
 "scripts": {
-  "dev": "next dev",
-  "build": "next build",
-  "start": "next start",
+  "test": "npx hardhat test",
+  "compile": "npx hardhat compile",
+  "deploy": "npx hardhat run scripts/deploy.js",
   "analyze": "node scripts/runSlither.js"
 },
 ```
