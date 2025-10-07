@@ -45,7 +45,7 @@ export default function HomePage() {
           </p>
           
           {/* Call to Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+          <div className="flex justify-center mb-12">
             <Link 
               href="/guides" 
               className="group bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-10 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl transform hover:-translate-y-1"
@@ -56,12 +56,6 @@ export default function HomePage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
                 </svg>
               </span>
-            </Link>
-            <Link 
-              href="/about" 
-              className="group bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-800 dark:text-gray-200 font-semibold py-4 px-10 rounded-xl transition-all duration-300 shadow-lg hover:shadow-2xl border border-gray-200 dark:border-gray-600 transform hover:-translate-y-1"
-            >
-              About Erkan
             </Link>
           </div>
         </div>
