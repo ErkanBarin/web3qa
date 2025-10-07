@@ -3,7 +3,7 @@ import crypto from 'node:crypto';
 
 // Enumerations (align with research.md)
 const CHAINS = ['ethereum','arbitrum','optimism','polygon','base','avalanche'];
-const TAGS = ['testing','security','tooling','guides','glossary','architecture','best-practices','performance','about','qa','web3','blockchain','hardhat','slither','playwright','foundry','solhint','openzeppelin'];
+const TAGS = ['testing','security','tooling','tools','guides','glossary','architecture','best-practices','performance','about','qa','web3','blockchain','hardhat','slither','playwright','foundry','solhint','openzeppelin','ethereum','resources','documentation','community','concepts'];
 const SECTIONS = ['guides','tools','concepts','patterns','tutorials','glossary','references','faq','about'];
 
 // Helpers
@@ -77,19 +77,7 @@ export const Article = defineDocumentType(() => ({
   }
 }));
 
-export const GlossaryTerm = defineDocumentType(() => ({
-  name: 'GlossaryTerm',
-  filePathPattern: `glossary/**/*.mdx`,
-  contentType: 'mdx',
-  fields: BaseFields,
-  computedFields: {
-    term: { type: 'string', resolve: doc => doc.title },
-    slug: { type: 'string', resolve: doc => slugify(doc.title) },
-    isGlossary: { type: 'boolean', resolve: () => true }
-  }
-}));
-
 export default makeSource({
   contentDirPath: 'content',
-  documentTypes: [Article, GlossaryTerm]
+  documentTypes: [Article]
 });
