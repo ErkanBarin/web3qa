@@ -2,7 +2,7 @@
 import { defineDocumentType, makeSource } from "contentlayer/source-files";
 import crypto from "node:crypto";
 var CHAINS = ["ethereum", "arbitrum", "optimism", "polygon", "base", "avalanche"];
-var TAGS = ["testing", "security", "tooling", "guides", "glossary", "architecture", "best-practices", "performance", "about", "qa", "web3", "blockchain", "hardhat", "slither", "playwright", "foundry", "solhint", "openzeppelin"];
+var TAGS = ["testing", "security", "tooling", "tools", "guides", "glossary", "architecture", "best-practices", "performance", "about", "qa", "web3", "blockchain", "hardhat", "slither", "playwright", "foundry", "solhint", "openzeppelin", "ethereum", "resources", "documentation", "community", "concepts"];
 var SECTIONS = ["guides", "tools", "concepts", "patterns", "tutorials", "glossary", "references", "faq", "about"];
 function slugify(str) {
   return str.toLowerCase().replace(/[_\s]+/g, "-").replace(/[^a-z0-9-]/g, "").replace(/-{2,}/g, "-").replace(/^-|-$/g, "");
@@ -66,24 +66,12 @@ var Article = defineDocumentType(() => ({
     }
   }
 }));
-var GlossaryTerm = defineDocumentType(() => ({
-  name: "GlossaryTerm",
-  filePathPattern: `glossary/**/*.mdx`,
-  contentType: "mdx",
-  fields: BaseFields,
-  computedFields: {
-    term: { type: "string", resolve: (doc) => doc.title },
-    slug: { type: "string", resolve: (doc) => slugify(doc.title) },
-    isGlossary: { type: "boolean", resolve: () => true }
-  }
-}));
 var contentlayer_config_default = makeSource({
   contentDirPath: "content",
-  documentTypes: [Article, GlossaryTerm]
+  documentTypes: [Article]
 });
 export {
   Article,
-  GlossaryTerm,
   contentlayer_config_default as default
 };
-//# sourceMappingURL=compiled-contentlayer-config-EA722JYE.mjs.map
+//# sourceMappingURL=compiled-contentlayer-config-2MBL2NXE.mjs.map

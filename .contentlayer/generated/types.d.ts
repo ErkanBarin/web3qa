@@ -27,25 +27,6 @@ export type Article = {
   normalizedTags: list
   isValid: boolean
   contentHash: string
-}
-
-export type GlossaryTerm = {
-  /** File path relative to `contentDirPath` */
-  _id: string
-  _raw: Local.RawDocumentData
-  type: 'GlossaryTerm'
-  title: string
-  description: string
-  section: string
-  chain?: string | undefined
-  tags?: string[] | undefined
-  lastUpdated?: IsoDateTimeString | undefined
-  draft: boolean
-  /** MDX file body */
-  body: MDX
-  term: string
-  slug: string
-  isGlossary: boolean
 }  
 
 /** Nested types */
@@ -56,8 +37,8 @@ export type GlossaryTerm = {
 export type AllTypes = DocumentTypes | NestedTypes
 export type AllTypeNames = DocumentTypeNames | NestedTypeNames
 
-export type DocumentTypes = Article | GlossaryTerm
-export type DocumentTypeNames = 'Article' | 'GlossaryTerm'
+export type DocumentTypes = Article
+export type DocumentTypeNames = 'Article'
 
 export type NestedTypes = never
 export type NestedTypeNames = never
@@ -65,7 +46,6 @@ export type NestedTypeNames = never
 export type DataExports = {
   allDocuments: DocumentTypes[]
   allArticles: Article[]
-  allGlossaryTerms: GlossaryTerm[]
 }
 
 
@@ -86,7 +66,6 @@ declare global {
 
 export type DocumentTypeMap = {
   Article: Article
-  GlossaryTerm: GlossaryTerm
 }
 
 export type NestedTypeMap = {
