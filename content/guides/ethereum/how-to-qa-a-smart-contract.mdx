@@ -76,10 +76,103 @@ npx hardhat
 - Configure network settings for different environments
 - Install and configure essential Hardhat plugins
 
-## Step 2: Static Analysis with Slither
+## Step 2: Static Analysis - The JavaScript Way
 
 ### Understanding Static Analysis
 Static analysis examines code without executing it, identifying potential vulnerabilities, code smells, and optimization opportunities before runtime testing begins.
+
+### The Easy Way: Solhint
+
+For quick linting and basic security checks, Solhint is your first line of defense. It's fast, easy to configure, and catches common issues.
+
+```bash
+# Install Solhint
+npm install --save-dev solhint
+
+# Initialize configuration
+npx solhint --init
+
+# Run basic analysis
+npx solhint 'contracts/**/*.sol'
+```
+
+### The Pro Way: Running Slither from a JS Script
+
+For a deeper security scan, you still want the power of Slither. The good news? You can run it from a JS script without ever leaving your project. This allows you to programmatically check the results and even fail your CI/CD pipeline if critical issues are found.
+
+**1. Create the script file:**
+First, create a new file in your project at `scripts/runSlither.js`.
+
+**2. Add the code:**
+Paste the following Node.js code into your new `runSlither.js` file. This script executes Slither and parses its JSON output.
+
+```javascript
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
+
+async function analyzeContracts() {
+  console.log('Running Slither analysis...');
+  try {
+    // We tell Slither to output its findings as clean JSON
+    const { stdout } = await exec('slither . --json -');
+    const results = JSON.parse(stdout);
+
+    if (results.success && results.results.detectors) {
+      const issues = results.results.detectors;
+      console.log(`✅ Slither analysis complete. Issues found: ${issues.length}`);
+      if (issues.length > 0) {
+        issues.forEach(issue => console.log(`- ${issue.check} (${issue.impact}): ${issue.description}`));
+        process.exit(1); // Fail the script if issues are found
+      }
+    } else {
+       console.error('Slither analysis failed to produce valid results.');
+       if(results.error) console.error(results.error);
+       process.exit(1);
+    }
+  } catch (error) {
+    // Slither often outputs findings to stderr, so we parse it here
+    const errorOutput = error.stderr || error.stdout;
+    try {
+      const results = JSON.parse(errorOutput);
+       if (results.success && results.results.detectors) {
+        const issues = results.results.detectors;
+        console.log(`✅ Slither analysis complete. Issues found: ${issues.length}`);
+         if (issues.length > 0) {
+          issues.forEach(issue => console.log(`- ${issue.check} (${issue.impact}): ${issue.description}`));
+          process.exit(1); // Fail the script if issues are found
+        }
+       } else {
+         console.error('Failed to parse Slither output from error stream:', results.error);
+         process.exit(1);
+       }
+    } catch (parseError) {
+      console.error('Failed to execute or parse Slither:', error.stderr);
+      process.exit(1);
+    }
+  }
+}
+
+analyzeContracts();
+```
+
+**3. Add the script to `package.json`:**
+Now, open your `package.json` file and add an `analyze` script.
+
+```json
+"scripts": {
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "analyze": "node scripts/runSlither.js"
+},
+```
+
+**4. Run the analysis:**
+You can now run a full Slither scan at any time from your terminal with one simple command:
+
+```bash
+npm run analyze
+```
 
 ### Installing and Configuring Slither
 ```bash
