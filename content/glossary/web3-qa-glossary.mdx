@@ -1,0 +1,323 @@
+---
+title: "The Essential Web3 QA Glossary"
+description: "Your go-to glossary for all the key terms in Web3 and smart contract testing. Simple, concise definitions for terms like ABI, Gas, EVM, Mempool, and more."
+section: glossary
+tags:
+  - glossary
+  - concepts
+  - best-practices
+lastUpdated: 2025-10-07
+draft: false
+---
+
+# The Essential Web3 QA Glossary
+
+Web3 is filled with jargon. From 'gas' to 'gaslighting' (just kidding... mostly), it can feel like learning a new language. This glossary is your go-to reference for all the key terms you'll encounter in Web3 testing. We've kept the definitions simple and focused on what matters for a QA engineer.
+
+---
+
+## A
+
+**ABI (Application Binary Interface)**  
+The "user manual" for a smart contract. It's a JSON file that defines how to call the contract's functions and interpret its data. Your testing scripts use the ABI to know how to interact with the contract.
+
+**Address**  
+A unique identifier for a wallet or smart contract on the blockchain, similar to a bank account number. It's a long string of characters that usually starts with `0x`.
+
+**API3**  
+A decentralized oracle network that provides reliable, secure data feeds to smart contracts. Important for testing contracts that depend on external data.
+
+**Arbitrum**  
+A Layer 2 scaling solution for Ethereum that offers faster and cheaper transactions while maintaining security. Popular platform for deploying and testing dApps.
+
+**Audit**  
+A comprehensive security review of smart contract code performed by third-party experts to identify vulnerabilities before deployment.
+
+---
+
+## B
+
+**Block**  
+A collection of transactions that have been validated and added to the blockchain. Each block contains a timestamp and reference to the previous block.
+
+**Blockchain**  
+A distributed, immutable ledger that records transactions across multiple computers. The foundation technology for Web3 applications.
+
+**Bytecode**  
+The compiled version of smart contract code that runs on the Ethereum Virtual Machine (EVM). What you're actually testing when you deploy contracts.
+
+---
+
+## C
+
+**Chai**  
+A popular JavaScript testing library used with frameworks like Hardhat for writing assertions in smart contract tests.
+
+**Chainlink**  
+The most widely used decentralized oracle network that connects smart contracts to real-world data. Often integrated into contracts you'll be testing.
+
+**Code Coverage**  
+A metric that measures what percentage of your smart contract code is executed by your test suite. Aim for 100% in Web3.
+
+**Consensus**  
+The mechanism by which blockchain nodes agree on the current state of the blockchain. Important for understanding finality in testing.
+
+---
+
+## D
+
+**dApp (Decentralized Application)**  
+An application whose backend logic runs on a decentralized network (the blockchain) via smart contracts, instead of on a central server. This is the main type of application you'll be testing.
+
+**DeFi (Decentralized Finance)**  
+Financial applications built on blockchain technology that operate without traditional intermediaries like banks. Common testing domain.
+
+**Deploy**  
+The process of publishing a smart contract to the blockchain, making it live and immutable. The final step after thorough testing.
+
+---
+
+## E
+
+**ERC-20**  
+The technical standard for fungible tokens on Ethereum. If you're testing a cryptocurrency or a governance token, it's almost certainly an ERC-20 token.
+
+**ERC-721**  
+The technical standard for non-fungible tokens (NFTs) on Ethereum. It allows for the creation of unique, one-of-a-kind digital assets.
+
+**ERC-1155**  
+A token standard that supports both fungible and non-fungible tokens in a single contract. More complex to test due to multiple token types.
+
+**Ethers.js**  
+A popular JavaScript library for interacting with the Ethereum blockchain. Commonly used in testing frameworks like Hardhat.
+
+**EVM (Ethereum Virtual Machine)**  
+The "global computer" that runs on every Ethereum node and is responsible for executing smart contract code. When you test a contract, you're testing how its code behaves inside the EVM.
+
+---
+
+## F
+
+**Finality**  
+The point at which a transaction is considered irreversible on the blockchain. Important for understanding when test results are truly confirmed.
+
+**Fork**  
+Creating a copy of the blockchain state at a specific point in time. Useful for testing against real mainnet data without spending real money.
+
+**Foundry**  
+A fast, Rust-based development framework for Ethereum that includes testing, debugging, and deployment tools. Alternative to Hardhat.
+
+**Front-running**  
+When someone sees a pending transaction and places their own transaction with higher gas to execute first. A common attack vector to test for.
+
+---
+
+## G
+
+**Gas**  
+The fee required to conduct a transaction or execute a contract on the Ethereum blockchain. It's paid in the network's native currency (like ETH) and compensates validators for their computational work.
+
+**Gas Limit**  
+The maximum amount of gas you are willing to spend on a transaction. A key part of testing is ensuring your functions don't consume too much gas and hit this limit, which would cause the transaction to fail.
+
+**Gas Price**  
+The amount you're willing to pay per unit of gas. Higher gas prices mean faster transaction inclusion during network congestion.
+
+**Genesis Block**  
+The first block in a blockchain. Your local testing networks start with their own genesis block.
+
+**Gwei**  
+A unit of measurement for gas prices. 1 Gwei = 0.000000001 ETH. Commonly used when setting gas prices in tests.
+
+---
+
+## H
+
+**Hardhat**  
+An industry-standard, JavaScript-based development environment for compiling, deploying, testing, and debugging Ethereum software. It provides a local blockchain for instant testing.
+
+**Hash**  
+A unique, fixed-length string generated by a cryptographic function. Used to identify transactions, blocks, and contract addresses.
+
+**Hexadecimal**  
+A base-16 number system used throughout Ethereum. Addresses and many values are represented in hex format (starting with `0x`).
+
+---
+
+## I
+
+**Immutability**  
+A core concept of blockchain. Once data (like a transaction or a smart contract) is written to the blockchain, it can never be changed or deleted. This is why pre-deployment testing is so critical.
+
+**Integration Test**  
+Testing that verifies how multiple smart contracts work together. More complex than unit tests but essential for dApp functionality.
+
+---
+
+## J
+
+**JSON-RPC**  
+A protocol used to communicate with blockchain nodes. Your testing framework uses JSON-RPC to send transactions and query blockchain state.
+
+---
+
+## L
+
+**Layer 1 (L1)**  
+The main blockchain network (like Ethereum mainnet). Where final transaction settlement occurs.
+
+**Layer 2 (L2)**  
+Secondary networks built on top of Layer 1 to improve scalability and reduce costs. Examples include Arbitrum and Optimism.
+
+**Liquidity**  
+The availability of funds in a DeFi protocol. Important metric to test in financial applications.
+
+---
+
+## M
+
+**Mainnet**  
+The primary, live, public blockchain where transactions have real economic value. This is where dApps go live after they've been thoroughly tested.
+
+**Mempool (Memory Pool)**  
+A "waiting room" for pending transactions. When you submit a transaction, it sits in the mempool before a validator picks it up and includes it in a block.
+
+**MEV (Maximal Extractable Value)**  
+The profit that can be extracted by reordering, including, or censoring transactions. An attack vector to consider in testing.
+
+**Metamask**  
+A popular browser extension wallet used to interact with Ethereum dApps. Often used in end-to-end testing scenarios.
+
+**Minting**  
+The process of creating new tokens or NFTs. A common function to test in token contracts.
+
+---
+
+## N
+
+**NFT (Non-Fungible Token)**  
+A unique digital asset that represents ownership of a specific item. Built using standards like ERC-721 or ERC-1155.
+
+**Node**  
+A computer that participates in the blockchain network by validating transactions and maintaining the blockchain state.
+
+**Nonce**  
+A number that ensures each transaction from an account is unique and processed in order. Important for understanding transaction ordering in tests.
+
+---
+
+## O
+
+**Oracle**  
+A service that provides external data to smart contracts. Common integration point that requires careful testing for price manipulation and data reliability.
+
+**Optimism**  
+A Layer 2 scaling solution for Ethereum that uses optimistic rollups to reduce costs and improve transaction speed.
+
+---
+
+## P
+
+**Polygon**  
+A popular Ethereum-compatible blockchain that offers faster and cheaper transactions. Common deployment target for tested contracts.
+
+**Private Key**  
+A secret key that proves ownership of a blockchain address. Never use real private keys in tests—use generated test keys only.
+
+**Proof of Stake (PoS)**  
+Ethereum's consensus mechanism where validators are chosen based on their stake in the network rather than computational power.
+
+**Public Key**  
+The cryptographic counterpart to a private key that can be shared publicly. Used to derive blockchain addresses.
+
+---
+
+## R
+
+**Reentrancy**  
+A vulnerability where a function can be called recursively before its first execution completes. A critical security issue to test for.
+
+**Revert**  
+When a transaction fails and all state changes are undone. Testing should verify that functions revert under expected error conditions.
+
+**RPC (Remote Procedure Call)**  
+A protocol for communicating with blockchain nodes. Your testing setup uses RPC to interact with local or remote blockchains.
+
+---
+
+## S
+
+**Smart Contract**  
+A program that runs on the blockchain. It's a collection of code and data that resides at a specific address on the Ethereum blockchain. They are the backend of dApps.
+
+**Solidity**  
+The most popular programming language for writing smart contracts on Ethereum and other EVM-compatible blockchains.
+
+**Slither**  
+A static analysis framework for Solidity that identifies potential vulnerabilities in smart contract code. Essential tool for security testing.
+
+**State**  
+The current condition of all data stored on the blockchain, including account balances and smart contract storage.
+
+**Signer**  
+An object that can sign transactions, typically representing a wallet or account in your testing environment.
+
+---
+
+## T
+
+**Testnet**  
+A "practice" blockchain that mimics the behavior of the mainnet but where the currency has no real-world value. Testnets like Sepolia are used for final, pre-production testing.
+
+**Transaction**  
+A cryptographically signed instruction from an account. It can be a simple transfer of ETH or a complex call to a smart contract function.
+
+**Transaction Hash (txHash)**  
+A unique identifier for a specific transaction on the blockchain. Used to track and verify transaction status in tests.
+
+**TVL (Total Value Locked)**  
+The total amount of funds locked in a DeFi protocol. An important metric to track and test in financial applications.
+
+---
+
+## U
+
+**Unit Test**  
+Testing individual functions or components in isolation. The foundation of smart contract testing strategies.
+
+**Upgrade**  
+The process of modifying a smart contract's logic. Requires special proxy patterns since contracts are normally immutable.
+
+---
+
+## V
+
+**Validator**  
+A node that participates in consensus by proposing and validating new blocks. Replaces miners in Proof of Stake systems.
+
+**Vyper**  
+An alternative to Solidity for writing smart contracts, designed with security and readability in mind.
+
+---
+
+## W
+
+**Wallet**  
+Software that manages private keys and allows interaction with blockchain networks. Can be browser-based, mobile, or hardware.
+
+**Web3**  
+The vision of a decentralized internet built on blockchain technology, where users own their data and digital assets.
+
+**Wei**  
+The smallest unit of ETH. 1 ETH = 1,000,000,000,000,000,000 Wei. Used for precise calculations in smart contracts.
+
+---
+
+## Z
+
+**Zero Address**  
+The address `0x0000000000000000000000000000000000000000` used to represent null or to burn tokens. Common edge case to test for.
+
+---
+
+*This glossary is continuously updated as the Web3 ecosystem evolves. Bookmark this page for quick reference while diving into Web3 testing!*
