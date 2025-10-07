@@ -2,7 +2,7 @@
 import { defineDocumentType, makeSource } from "contentlayer/source-files";
 import crypto from "node:crypto";
 var CHAINS = ["ethereum", "arbitrum", "optimism", "polygon", "base", "avalanche"];
-var TAGS = ["testing", "security", "tooling", "guides", "glossary", "architecture", "best-practices", "performance", "about", "qa", "web3", "blockchain"];
+var TAGS = ["testing", "security", "tooling", "guides", "glossary", "architecture", "best-practices", "performance", "about", "qa", "web3", "blockchain", "hardhat", "slither", "playwright", "foundry", "solhint", "openzeppelin"];
 var SECTIONS = ["guides", "tools", "concepts", "patterns", "tutorials", "glossary", "references", "faq", "about"];
 function slugify(str) {
   return str.toLowerCase().replace(/[_\s]+/g, "-").replace(/[^a-z0-9-]/g, "").replace(/-{2,}/g, "-").replace(/^-|-$/g, "");
@@ -86,4 +86,4 @@ export {
   GlossaryTerm,
   contentlayer_config_default as default
 };
-//# sourceMappingURL=compiled-contentlayer-config-QI4C3YG7.mjs.map
+//# sourceMappingURL=compiled-contentlayer-config-EA722JYE.mjs.map

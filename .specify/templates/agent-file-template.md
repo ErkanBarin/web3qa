@@ -1,23 +1,33 @@
 # [PROJECT NAME] Development Guidelines
-
-Auto-generated from all feature plans. Last updated: [DATE]
+Auto-generated from feature plans. Last updated: [DATE]
 
 ## Active Technologies
-[EXTRACTED FROM ALL PLAN.MD FILES]
+- Next.js (App Router), JavaScript strict
+- Tailwind CSS + @tailwindcss/typography
+- MDX via Contentlayer
+- shadcn/ui + lucide-react
+- PNPM, ESLint, Prettier, Vitest/Playwright (as chosen in plan)
+- Vercel deploy, Namecheap DNS
 
 ## Project Structure
-```
-[ACTUAL STRUCTURE FROM PLANS]
-```
-
+- app/, components/, content/, lib/, styles/, .specify/, .github/workflows/
 ## Commands
-[ONLY COMMANDS FOR ACTIVE TECHNOLOGIES]
+- `pnpm dev` — local dev
+- `pnpm build` — typecheck + build
+- `pnpm lint` — ESLint
+- `pnpm test` — tests (unit/e2e if configured)
+- `uvx ... specify guard` — Spec-Guard
 
 ## Code Style
-[LANGUAGE-SPECIFIC, ONLY FOR LANGUAGES IN USE]
+- JS strict, no `any`
+- Server components by default
+- Tailwind for styling; no inline styles
+- MDX: front-matter { title, section, chain, scenarios[], tags[], summary, updated }
 
 ## Recent Changes
-[LAST 3 FEATURES AND WHAT THEY ADDED]
+- [1] [FEATURE] added [files]
+- [2] ...
+- [3] ...
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

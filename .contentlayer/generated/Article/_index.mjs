@@ -2,7 +2,9 @@
 
 import aboutMdx from './about.mdx.json' assert { type: 'json' }
 import glossary__fuzzingMdx from './glossary__fuzzing.mdx.json' assert { type: 'json' }
+import tools__essentialToolkitMdx from './tools__essential-toolkit.mdx.json' assert { type: 'json' }
+import guides__ethereum__howToQaASmartContractMdx from './guides__ethereum__how-to-qa-a-smart-contract.mdx.json' assert { type: 'json' }
 import guides__ethereum__introToTestingMdx from './guides__ethereum__intro-to-testing.mdx.json' assert { type: 'json' }
 import tools__ethereum__experimentalToolMdx from './tools__ethereum__experimental-tool.mdx.json' assert { type: 'json' }
 
-export const allArticles = [aboutMdx, glossary__fuzzingMdx, guides__ethereum__introToTestingMdx, tools__ethereum__experimentalToolMdx]
+export const allArticles = [aboutMdx, glossary__fuzzingMdx, tools__essentialToolkitMdx, guides__ethereum__howToQaASmartContractMdx, guides__ethereum__introToTestingMdx, tools__ethereum__experimentalToolMdx]
