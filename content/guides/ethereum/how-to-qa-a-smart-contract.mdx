@@ -110,43 +110,56 @@ Paste the following Node.js code into your new `runSlither.js` file. This script
 const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
+function parseAndHandleSlitherOutput(output) {
+  if (!output || typeof output !== 'string') {
+    console.error('Invalid Slither output: empty or non-string result');
+    process.exit(1);
+  }
+
+  let results;
+  try {
+    results = JSON.parse(output);
+  } catch (parseError) {
+    console.error('Failed to parse Slither JSON output:', parseError.message);
+    process.exit(1);
+  }
+
+  if (!results || !results.success || !results.results || !results.results.detectors) {
+    console.error('Slither analysis failed to produce valid results.');
+    if (results && results.error) {
+      console.error('Error details:', results.error);
+    }
+    process.exit(1);
+  }
+
+  const issues = results.results.detectors;
+  console.log(`✅ Slither analysis complete. Issues found: ${issues.length}`);
+  
+  if (issues.length > 0) {
+    issues.forEach(issue => {
+      const check = issue.check || 'unknown-check';
+      const impact = issue.impact || 'unknown-impact';
+      const description = issue.description || 'No description available';
+      console.log(`- ${check} (${impact}): ${description}`);
+    });
+    process.exit(1); // Fail the script if issues are found
+  }
+}
+
 async function analyzeContracts() {
   console.log('Running Slither analysis...');
   try {
     // We tell Slither to output its findings as clean JSON
     const { stdout } = await exec('slither . --json -');
-    const results = JSON.parse(stdout);
-
-    if (results.success && results.results.detectors) {
-      const issues = results.results.detectors;
-      console.log(`✅ Slither analysis complete. Issues found: ${issues.length}`);
-      if (issues.length > 0) {
-        issues.forEach(issue => console.log(`- ${issue.check} (${issue.impact}): ${issue.description}`));
-        process.exit(1); // Fail the script if issues are found
-      }
-    } else {
-       console.error('Slither analysis failed to produce valid results.');
-       if(results.error) console.error(results.error);
-       process.exit(1);
-    }
+    parseAndHandleSlitherOutput(stdout);
   } catch (error) {
     // Slither often outputs findings to stderr, so we parse it here
     const errorOutput = error.stderr || error.stdout;
-    try {
-      const results = JSON.parse(errorOutput);
-       if (results.success && results.results.detectors) {
-        const issues = results.results.detectors;
-        console.log(`✅ Slither analysis complete. Issues found: ${issues.length}`);
-         if (issues.length > 0) {
-          issues.forEach(issue => console.log(`- ${issue.check} (${issue.impact}): ${issue.description}`));
-          process.exit(1); // Fail the script if issues are found
-        }
-       } else {
-         console.error('Failed to parse Slither output from error stream:', results.error);
-         process.exit(1);
-       }
-    } catch (parseError) {
-      console.error('Failed to execute or parse Slither:', error.stderr);
+    if (errorOutput) {
+      parseAndHandleSlitherOutput(errorOutput);
+    } else {
+      console.error('Failed to execute Slither - no output captured');
+      console.error('Error details:', error.message);
       process.exit(1);
     }
   }
