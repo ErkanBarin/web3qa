@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import SectionCard from '../components/SectionCard.jsx';
 
 const SECTIONS = [
@@ -51,18 +52,18 @@ export default function HomePage() {
 
         {/* Call to Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-          <a 
+          <Link 
             href="/guides" 
             className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
           >
             Start Learning
-          </a>
-          <a 
+          </Link>
+          <Link 
             href="/about" 
             className="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-semibold py-3 px-8 rounded-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
           >
             About Erkan
-          </a>
+          </Link>
         </div>
       </div>
 
