@@ -1,0 +1,290 @@
+---
+title: "Your First Web3 Test: A Beginner's Tutorial to Setting Up Hardhat"
+description: "A step-by-step, hands-on tutorial for beginners. Go from an empty folder to running your very first smart contract unit test using the industry-standard Hardhat framework."
+section: tutorials
+tags:
+  - testing
+  - guides
+  - tooling
+  - hardhat
+lastUpdated: 2025-10-07
+draft: false
+---
+
+# Your First Web3 Test: A Beginner's Tutorial to Setting Up Hardhat
+
+Theory is great, but nothing beats getting your hands dirty. This tutorial is all about action. We're going to go from a completely empty folder to running your very first smart contract unit test in about 15 minutes. No complex concepts, just simple, repeatable steps.
+
+By the end of this, you'll have a fully functional, professional Web3 testing environment set up on your machine. Let's get started! 🚀
+
+---
+
+## What You'll Need
+
+Before we begin, make sure you have:
+- **Node.js** (version 16 or higher) installed on your computer
+- **A terminal or command prompt** (or VS Code with integrated terminal)
+- **About 15 minutes** of your time
+
+That's it! No blockchain knowledge required.
+
+---
+
+## Step 1: Create Your Project Folder
+
+First things first, we need a place for our project to live. Open your terminal (or the VS Code integrated terminal) and type these commands, hitting Enter after each one.
+
+```bash
+# Create a new folder for our project
+mkdir my-first-web3-test
+
+# Navigate into that new folder
+cd my-first-web3-test
+
+# Initialize it as a Node.js project
+npm init -y
+```
+
+Easy enough, right? You now have an empty project waiting for some magic.
+
+**What just happened?** You created a new directory, navigated into it, and initialized a Node.js project. The `npm init -y` command created a `package.json` file that will track all your project dependencies.
+
+---
+
+## Step 2: Install Hardhat
+
+Next, we'll install Hardhat and its incredibly useful "Toolbox," which bundles together all the essential testing libraries we need (like Ethers.js and Chai).
+
+Run this single command in your terminal:
+
+```bash
+npm install --save-dev hardhat @nomicfoundation/hardhat-toolbox
+```
+
+This will download all the necessary files into a new `node_modules` folder. You'll see a progress bar and lots of text scrolling by—that's normal!
+
+**What just happened?** You installed Hardhat (the development framework) and the Hardhat Toolbox (a collection of useful plugins). The `--save-dev` flag means these are development dependencies—tools you need for building and testing, but not for running the final application.
+
+---
+
+## Step 3: Initialize Your Hardhat Project
+
+Now we'll have Hardhat set up a sample project for us. This is the best part, as it gives us a ready-made smart contract and a test file to play with.
+
+Run this command:
+
+```bash
+npx hardhat
+```
+
+Hardhat will now ask you a few questions. Here's what to choose:
+
+1. **`What do you want to do?`** → Choose **`Create a TypeScript project`**
+2. **`Hardhat project root:`** → Just press **Enter** to accept the default
+3. **`Do you want to add a .gitignore?`** → Type **`y`** and press **Enter**
+4. **`Do you want to install this sample project's dependencies with npm?`** → Type **`y`** and press **Enter**
+
+After a moment, Hardhat will create a few folders for you:
+- **`contracts/`**: Where your Solidity smart contract code lives
+- **`scripts/`**: For scripts to deploy your contracts  
+- **`test/`**: Where your test files live. This is our focus today!
+- **`ignition/`**: For advanced deployment configurations
+
+**What just happened?** Hardhat created a complete project structure with a sample smart contract (`Lock.sol`) and corresponding test file. You now have everything needed to start testing smart contracts.
+
+---
+
+## Step 4: Run the Sample Test
+
+Believe it or not, you're already ready to run a test! Hardhat has created a sample contract called `Lock.sol` and a corresponding test file in the `test/` directory.
+
+Let's run the tests and see what happens. In your terminal, type:
+
+```bash
+npx hardhat test
+```
+
+You should see a green, satisfying output that looks something like this:
+
+```
+  Lock
+    Deployment
+      ✔ Should set the right unlockTime (1213ms)
+      ✔ Should set the right owner
+      ✔ Should set the right owner
+      ✔ Should receive and store the funds to lock
+    Withdrawals
+      ✔ Should revert with the right error if called too soon
+      ✔ Should revert with the right error if called from another account
+      ✔ Should't fail if the unlockTime has arrived and the owner calls it
+
+  7 passing (2s)
+```
+
+🎉 **Congratulations!** You've just successfully run your first smart contract unit tests on a local blockchain that Hardhat created for you automatically.
+
+**What just happened?** Hardhat compiled your smart contract, deployed it to a local test blockchain, and ran a series of tests to verify it works correctly. Each ✔ represents a test that passed.
+
+---
+
+## Step 5: Understanding What You Just Tested
+
+Let's take a quick look at what the `Lock.sol` contract does, so you understand what you just tested:
+
+The `Lock` contract is a simple time-locked vault:
+- Someone can send Ethereum to it with a future "unlock time"
+- The funds are locked until that time arrives
+- Only the owner can withdraw the funds, and only after the unlock time
+
+The tests verify:
+- ✅ The contract correctly stores the unlock time
+- ✅ The contract correctly identifies the owner
+- ✅ The contract receives and holds the locked funds
+- ✅ Withdrawals fail if attempted too early
+- ✅ Withdrawals fail if attempted by the wrong person
+- ✅ Withdrawals succeed when conditions are met
+
+This covers the core testing patterns you'll use in Web3: testing successful operations, testing failure conditions, and verifying state changes.
+
+---
+
+## Step 6: Write Your Own Test
+
+Running a pre-written test is cool, but writing one is even better. Let's add our own simple test to make sure you understand the process.
+
+1. **Open the test file**: Navigate to `test/Lock.ts` in your code editor
+2. **Find the right spot**: Look for the `describe("Withdrawals", function () {` section
+3. **Add your test**: Just before the closing `});` of the Withdrawals section, add this new test:
+
+```typescript
+it("Should have a balance equal to the locked amount", async function () {
+  const { lock, lockedAmount } = await loadFixture(deployOneYearLockFixture);
+
+  // Check that the contract's balance matches what we locked
+  expect(await ethers.provider.getBalance(lock.target)).to.equal(
+    lockedAmount
+  );
+});
+```
+
+4. **Save the file** (Ctrl+S or Cmd+S)
+
+Now, go back to your terminal and run the test command again:
+
+```bash
+npx hardhat test
+```
+
+Your test output should now show **8 passing tests** instead of 7. You did it! You wrote and ran your own custom smart contract test.
+
+**What your test does:** Your test verifies that after deploying the Lock contract with some Ethereum, the contract's balance actually equals the amount that was supposed to be locked. It's a simple but important check—you want to make sure money actually went where it was supposed to go!
+
+---
+
+## Step 7: Make a Test Fail (Understanding What's Happening)
+
+One of the best ways to understand testing is to see what happens when things go wrong. Let's intentionally break a test to see how failure looks.
+
+1. **Edit your test**: Change the `equal` to `equal` to something obviously wrong:
+
+```typescript
+// Change this line in your test:
+expect(await ethers.provider.getBalance(lock.target)).to.equal(
+  lockedAmount + 1000000  // Add some random number
+);
+```
+
+2. **Run the test again**:
+
+```bash
+npx hardhat test
+```
+
+You should now see a red failure message showing exactly what was expected vs. what was actual. This is incredibly valuable for debugging!
+
+3. **Fix it back**: Remove the `+ 1000000` and save the file. Run the tests again to confirm everything passes.
+
+**Why this matters:** In real Web3 development, understanding exactly why tests fail is crucial. The error messages help you identify problems in your contract logic, test logic, or assumptions about how things should work.
+
+---
+
+## Step 8: Explore the Project Structure
+
+Now that you have a working setup, let's understand what Hardhat created for you:
+
+```
+my-first-web3-test/
+├── contracts/
+│   └── Lock.sol          # Your smart contract (written in Solidity)
+├── test/
+│   └── Lock.ts           # Your test file (written in TypeScript)
+├── scripts/
+│   └── deploy.ts         # Script to deploy your contract
+├── ignition/
+│   └── modules/
+│       └── Lock.ts       # Advanced deployment configuration
+├── hardhat.config.ts     # Hardhat configuration
+└── package.json          # Node.js dependencies
+```
+
+**Key files to know:**
+- **`contracts/Lock.sol`**: This is your smart contract written in Solidity
+- **`test/Lock.ts`**: This is where your tests live, written in TypeScript
+- **`hardhat.config.ts`**: Configuration for your Hardhat environment
+
+---
+
+## Next Steps: Level Up Your Testing
+
+Congratulations! You now have a professional Web3 testing environment. Here's how to continue your journey:
+
+### Immediate Next Steps
+1. **Experiment**: Try modifying the `Lock.sol` contract and see how it affects the tests
+2. **Break things**: Intentionally introduce bugs and see if your tests catch them
+3. **Add more tests**: Think of other scenarios to test (what happens with zero amounts? negative time values?)
+
+### Dive Deeper
+- **[The Great Divide: Why Web3 Testing is Different](/concepts/the-great-divide-why-web3-testing-is-different)** - Understand the fundamental differences
+- **[How to QA a Smart Contract](/guides/ethereumhow-to-qa-a-smart-contract)** - Comprehensive testing methodology
+- **[Essential Web3 QA Toolkit](/tools/essential-toolkit)** - Explore more advanced tools
+
+### Real-World Practice
+- Try testing different contract types (ERC-20 tokens, NFTs, DeFi protocols)
+- Learn about testing with different networks (testnets, mainnet forking)
+- Explore advanced Hardhat features like debugging and gas reporting
+
+---
+
+## Troubleshooting Common Issues
+
+**"Command not found: npx"**
+- Make sure Node.js is installed: `node --version`
+- If not installed, download from [nodejs.org](https://nodejs.org)
+
+**"Cannot find module" errors**
+- Run `npm install` in your project directory
+- Make sure you're in the right folder (`cd my-first-web3-test`)
+
+**Tests are failing unexpectedly**
+- Try deleting `node_modules` and running `npm install` again
+- Make sure you copied the test code exactly as shown
+
+**Slow performance**
+- This is normal for the first run as Hardhat downloads and compiles everything
+- Subsequent runs will be much faster
+
+---
+
+## Conclusion
+
+You've just accomplished something significant! You've:
+
+✅ Set up a professional Web3 development environment  
+✅ Run your first smart contract tests  
+✅ Written your own test code  
+✅ Understood the basic testing workflow  
+✅ Learned to interpret test results  
+
+This foundation will serve you well as you dive deeper into Web3 testing. The workflow you just learned—write tests, run tests, interpret results, iterate—is the same one used by professional Web3 developers working on multi-million dollar protocols.
+
+Welcome to the world of Web3 testing! 🚀
