@@ -62,7 +62,7 @@ export default function AboutPage() {
   };
 
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen bg-white dark:bg-gray-900">
       {/* Background elements */}
       <AboutBackground />
       

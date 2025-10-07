@@ -2,14 +2,14 @@
 
 import aboutMdx from './about.mdx.json' assert { type: 'json' }
 import concepts__theGreatDivideWhyWeb3TestingIsDifferentMdx from './concepts__the-great-divide-why-web3-testing-is-different.mdx.json' assert { type: 'json' }
-import faq__web3TestingFaqMdx from './faq__web3-testing-faq.mdx.json' assert { type: 'json' }
 import glossary__fuzzingMdx from './glossary__fuzzing.mdx.json' assert { type: 'json' }
 import glossary__web3QaGlossaryMdx from './glossary__web3-qa-glossary.mdx.json' assert { type: 'json' }
+import faq__web3TestingFaqMdx from './faq__web3-testing-faq.mdx.json' assert { type: 'json' }
 import patterns__smartContractTestingPatternsMdx from './patterns__smart-contract-testing-patterns.mdx.json' assert { type: 'json' }
-import references__curatedWeb3TestingResourcesMdx from './references__curated-web3-testing-resources.mdx.json' assert { type: 'json' }
 import tools__essentialToolkitMdx from './tools__essential-toolkit.mdx.json' assert { type: 'json' }
+import references__curatedWeb3TestingResourcesMdx from './references__curated-web3-testing-resources.mdx.json' assert { type: 'json' }
 import tutorials__yourFirstWeb3TestHardhatMdx from './tutorials__your-first-web3-test-hardhat.mdx.json' assert { type: 'json' }
 import guides__ethereum__howToQaASmartContractMdx from './guides__ethereum__how-to-qa-a-smart-contract.mdx.json' assert { type: 'json' }
 import tools__ethereum__experimentalToolMdx from './tools__ethereum__experimental-tool.mdx.json' assert { type: 'json' }
 
-export const allArticles = [aboutMdx, concepts__theGreatDivideWhyWeb3TestingIsDifferentMdx, faq__web3TestingFaqMdx, glossary__fuzzingMdx, glossary__web3QaGlossaryMdx, patterns__smartContractTestingPatternsMdx, references__curatedWeb3TestingResourcesMdx, tools__essentialToolkitMdx, tutorials__yourFirstWeb3TestHardhatMdx, guides__ethereum__howToQaASmartContractMdx, tools__ethereum__experimentalToolMdx]
+export const allArticles = [aboutMdx, concepts__theGreatDivideWhyWeb3TestingIsDifferentMdx, glossary__fuzzingMdx, glossary__web3QaGlossaryMdx, faq__web3TestingFaqMdx, patterns__smartContractTestingPatternsMdx, tools__essentialToolkitMdx, references__curatedWeb3TestingResourcesMdx, tutorials__yourFirstWeb3TestHardhatMdx, guides__ethereum__howToQaASmartContractMdx, tools__ethereum__experimentalToolMdx]

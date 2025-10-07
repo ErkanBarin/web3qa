@@ -28,7 +28,7 @@ const BlockchainBackground = () => (
 
 export default function HomePage() {
   return (
-    <div className="relative min-h-screen">
+    <div className="relative min-h-screen bg-white dark:bg-gray-900">
       {/* Blockchain Background */}
       <BlockchainBackground />
       
@@ -74,10 +74,10 @@ export default function HomePage() {
                   🌟 Beginning with the EVM Universe
                 </h2>
                 <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-                  The world of Web3 is massive. To provide the most in-depth and accurate content, we're starting with a laser focus on the <strong>Ethereum Virtual Machine (EVM) ecosystem</strong>. This includes Ethereum itself, plus all the major Layer 2s and compatible chains where the majority of developers are building today.
+                  The world of Web3 is massive. To provide the most in-depth and accurate content, I'm starting with a laser focus on the <strong>Ethereum Virtual Machine (EVM) ecosystem</strong>. This includes Ethereum itself, plus all the major Layer 2s and compatible chains where the majority of developers are building today.
                 </p>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  As we grow, we'll be rolling out dedicated content for other powerful ecosystems, including <strong>Solana, Cardano, XRPL, and more</strong>. Stay tuned! 🚀
+                  As the site grows, I'll be rolling out dedicated content for other powerful ecosystems, including <strong>Solana, Cardano, XRPL, and more</strong>. Stay tuned! 🚀
                 </p>
               </div>
             </div>

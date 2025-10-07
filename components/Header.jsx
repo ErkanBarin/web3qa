@@ -3,7 +3,7 @@ import ThemeToggle from './ThemeToggle.jsx';
 
 export function Header() {
   return (
-    <header className="p-4 border-b border-gray-200 dark:border-gray-800 flex items-center justify-between" data-test="site-header">
+    <header className="p-4 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex items-center justify-between" data-test="site-header">
       <div className="flex items-center gap-6">
         <a href="/" className="font-semibold tracking-tight text-lg">Web3 QA</a>
         <nav aria-label="Primary" className="hidden sm:block">
