@@ -2,7 +2,7 @@
 import { defineDocumentType, makeSource } from "contentlayer/source-files";
 import crypto from "node:crypto";
 var CHAINS = ["ethereum", "arbitrum", "optimism", "polygon", "base", "avalanche", "xrpl"];
-var TAGS = ["testing", "security", "tooling", "tools", "guides", "glossary", "architecture", "best-practices", "performance", "about", "qa", "web3", "blockchain", "hardhat", "slither", "playwright", "foundry", "solhint", "openzeppelin", "ethereum", "resources", "documentation", "community", "concepts", "xrpl", "hooks", "evm", "xahau", "jest", "xaman"];
+var TAGS = ["testing", "security", "tooling", "tools", "guides", "glossary", "architecture", "best-practices", "performance", "about", "qa", "web3", "blockchain", "hardhat", "slither", "playwright", "foundry", "solhint", "openzeppelin", "ethereum", "resources", "documentation", "community", "concepts", "xrpl", "hooks", "evm", "xahau", "jest", "xaman", "tutorial", "xrpl-js", "solidity"];
 var SECTIONS = ["guides", "tools", "concepts", "patterns", "tutorials", "glossary", "references", "faq", "about"];
 function slugify(str) {
   return str.toLowerCase().replace(/[_\s]+/g, "-").replace(/[^a-z0-9-]/g, "").replace(/-{2,}/g, "-").replace(/^-|-$/g, "");
@@ -74,4 +74,4 @@ export {
   Article,
   contentlayer_config_default as default
 };
-//# sourceMappingURL=compiled-contentlayer-config-RYRD6FFJ.mjs.map
+//# sourceMappingURL=compiled-contentlayer-config-KLU6XRJR.mjs.map

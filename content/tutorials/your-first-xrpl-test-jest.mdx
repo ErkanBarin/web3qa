@@ -1,0 +1,466 @@
+---
+title: "Your First XRPL Test: QA a Native Escrow with Jest & xrpl.js"
+description: "A step-by-step tutorial on writing your first automated test for the Native XRP Ledger. Learn to use Jest and xrpl.js to test a native Escrow feature."
+section: tutorials
+chain: xrpl
+tags:
+  - xrpl
+  - xahau
+  - tutorial
+  - jest
+  - xrpl-js
+lastUpdated: 2025-10-29
+draft: false
+---
+
+# Your First XRPL Test: QA a Native Escrow with Jest & xrpl.js
+
+Welcome to the world of Native XRP Ledger testing! This is your first hands-on tutorial for testing XRPL features. Unlike the EVM ecosystem where you test smart contracts in Solidity, the Native XRPL provides built-in features like Escrow, Payment Channels, and NFTs that you can test directly using JavaScript.
+
+Today, we're going to test a real XRPL feature: **Escrow**. This is a native capability of the ledger that lets you lock up XRP until a specific time or condition is met. By the end of this tutorial, you'll have written your first automated test using Jest and xrpl.js, and you'll understand the exact same workflow that's used for testing custom Hooks.
+
+Let's dive in! 🚀
+
+> **🎯 Why Start with Escrow?** Escrow is a perfect first test because it's a native XRPL feature (no custom code to deploy), demonstrates the core transaction pattern, and gives you immediate feedback on the testnet. Plus, this exact workflow applies to testing custom Hooks—you'll just swap the transaction type!
+
+---
+
+## What You'll Need
+
+Before we begin, make sure you have:
+- **Node.js** (version 16 or higher) installed on your computer
+- **A terminal or command prompt** (or VS Code with integrated terminal)
+- **Internet connection** (to connect to Xahau Testnet)
+- **About 10 minutes** of your time
+
+No prior blockchain experience required. We'll explain everything as we go.
+
+---
+
+## Understanding the XRPL Testing Model
+
+Quick context: The Native XRP Ledger (and Xahau) is fundamentally different from Ethereum. Instead of deploying contracts and running them on a local chain, you interact with a live testnet. Your tests:
+
+1. **Connect to a real testnet** (Xahau Testnet in our case)
+2. **Use real test accounts** (funded by a faucet)
+3. **Submit real transactions** to the live ledger
+4. **Assert on real results** from the network
+
+This is actually closer to real-world QA than local testing—you're validating behavior on a network that mirrors production!
+
+---
+
+## Step 1: Create Your Test Project
+
+First, let's create a clean workspace for our XRPL test. Open your terminal and run these commands:
+
+```bash
+# Create a new folder for our project
+mkdir xrpl-test
+
+# Navigate into that new folder
+cd xrpl-test
+
+# Initialize it as a Node.js project
+npm init -y
+```
+
+**What just happened?** You created a dedicated project directory and initialized it with a `package.json` file that will track your dependencies.
+
+---
+
+## Step 2: Install Testing Dependencies
+
+Now we'll install the two core libraries we need:
+- **Jest**: The testing framework (handles test running, assertions, reporting)
+- **xrpl.js**: The official JavaScript library for interacting with the XRP Ledger
+
+Run this command:
+
+```bash
+npm install --save-dev jest xrpl
+```
+
+This will download both packages into your `node_modules` folder. You'll see a progress bar—give it a moment to complete.
+
+**What just happened?** You installed Jest (industry-standard JavaScript testing framework) and xrpl.js (the official XRPL client library). These two tools are all you need for comprehensive XRPL testing!
+
+---
+
+## Step 3: Get Test Credentials from the Faucet
+
+To send transactions on the XRPL, you need a funded account. Fortunately, the Xahau Testnet provides a free faucet that generates test accounts instantly.
+
+1. **Visit the Xahau Testnet Faucet**: Open your browser and go to:
+   ```
+   https://xahau.test.faucet.xrpl.org/
+   ```
+
+2. **Generate Credentials**: Click the "Generate" or "Get Testnet XRP" button
+
+3. **Save Your Credentials**: You'll receive two critical values:
+   - **Address**: Your account identifier (starts with `r`, like `rN7n7otQDd6FczFgLdAqD...`)
+   - **Secret**: Your private key (starts with `s`, like `sEdTM1uX8pu2do5XvTnutH6HsouMa`)
+
+   **Copy both of these!** You'll need them in the next step.
+
+> **🔒 Security Note**: These are TESTNET credentials with no real value. Never use testnet secrets on mainnet, and never commit real secrets to git. This is safe for learning purposes only.
+
+---
+
+## Step 4: Create Your Test File
+
+Now let's create the actual test file. In your project folder, create a new file named `escrow.test.js`:
+
+```bash
+# Create the test file (on macOS/Linux)
+touch escrow.test.js
+
+# Or on Windows:
+# type nul > escrow.test.js
+```
+
+Open `escrow.test.js` in your code editor and paste the following test code:
+
+```javascript
+const xrpl = require("xrpl");
+
+jest.setTimeout(40000); // Give network tests enough time
+
+describe("XRPL Escrow Test", () => {
+  it("should create an escrow successfully on Xahau Testnet", async () => {
+    // STEP 1: Connect to Xahau Testnet
+    const client = new xrpl.Client("wss://xahau-test.net");
+    await client.connect();
+
+    // STEP 2: Create a wallet from your faucet secret
+    // TODO: Replace this with YOUR secret from the faucet
+    const wallet = xrpl.Wallet.fromSeed("sEdTM1uX8pu2do5XvTnutH6HsouMa");
+
+    // STEP 3: Define the EscrowCreate transaction
+    const finishAfter = Math.floor(Date.now() / 1000) + 60; // Unlock in 60 seconds
+    const escrowTx = {
+      TransactionType: "EscrowCreate",
+      Account: wallet.address,
+      Destination: wallet.address, // Send to ourselves for simplicity
+      Amount: "1000000", // 1 XRP in drops (1 XRP = 1,000,000 drops)
+      FinishAfter: finishAfter,
+    };
+
+    // STEP 4: Submit the transaction and wait for validation
+    const response = await client.submitAndWait(escrowTx, { wallet });
+
+    // STEP 5: Assert that the transaction succeeded
+    expect(response.result.meta.TransactionResult).toBe("tesSUCCESS");
+
+    // STEP 6: Log the result for visibility
+    console.log("✅ Escrow created successfully!");
+    console.log(`Transaction hash: ${response.result.hash}`);
+    console.log(`Ledger index: ${response.result.ledger_index}`);
+
+    // STEP 7: Disconnect from the network
+    await client.disconnect();
+  });
+});
+```
+
+**Important**: Replace `"sEdTM1uX8pu2do5XvTnutH6HsouMa"` with the **secret** you got from the faucet in Step 3!
+
+---
+
+## Step 5: Configure Jest
+
+Before running the test, we need to configure Jest to work in a Node.js environment. Open your `package.json` file and add a `jest` configuration key:
+
+```json
+{
+  "name": "xrpl-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.0.0",
+    "xrpl": "^2.0.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
+```
+
+The `"jest": { "testEnvironment": "node" }` configuration prevents a common environment error when running network tests.
+
+**Also add the test script** if you haven't already:
+```json
+"scripts": {
+  "test": "jest"
+}
+```
+
+---
+
+## Step 6: Run Your First Test!
+
+You're ready! Let's run the test and see it in action. In your terminal, run:
+
+```bash
+npm test
+```
+
+If everything is configured correctly, you should see output like this:
+
+```
+ PASS  ./escrow.test.js
+  XRPL Escrow Test
+    ✓ should create an escrow successfully on Xahau Testnet (2431ms)
+
+  console.log
+    ✅ Escrow created successfully!
+    Transaction hash: A1B2C3D4E5F6...
+    Ledger index: 12345678
+
+Test Suites: 1 passed, 1 total
+Tests:       1 passed, 1 total
+Snapshots:   0 total
+Time:        3.142 s
+```
+
+🎉 **Congratulations!** You just wrote and executed your first automated XRPL test. You connected to a live testnet, submitted a real transaction, and verified it succeeded!
+
+---
+
+## Understanding What Your Test Does
+
+Let's break down each part of the test so you understand the workflow:
+
+### 1. **Client Connection**
+```javascript
+const client = new xrpl.Client("wss://xahau-test.net");
+await client.connect();
+```
+This creates a WebSocket connection to the Xahau Testnet. The client handles all network communication.
+
+### 2. **Wallet Setup**
+```javascript
+const wallet = xrpl.Wallet.fromSeed("sEdTM1uX...");
+```
+Your wallet is created from your secret key. This gives you the ability to sign transactions.
+
+### 3. **Transaction Definition**
+```javascript
+const escrowTx = {
+  TransactionType: "EscrowCreate",
+  Account: wallet.address,
+  Destination: wallet.address,
+  Amount: "1000000", // 1 XRP in drops
+  FinishAfter: finishAfter,
+};
+```
+This defines an EscrowCreate transaction that locks 1 XRP for 60 seconds. Notice we're using native XRPL transaction types—no smart contract deployment needed!
+
+### 4. **Submit and Wait**
+```javascript
+const response = await client.submitAndWait(escrowTx, { wallet });
+```
+This submits your transaction to the network and waits for it to be validated in a ledger. The `wallet` parameter tells xrpl.js to automatically sign the transaction.
+
+### 5. **Assertion**
+```javascript
+expect(response.result.meta.TransactionResult).toBe("tesSUCCESS");
+```
+This is the actual test! We're asserting that the transaction result code is `tesSUCCESS`, meaning the escrow was created successfully.
+
+---
+
+## Step 6: See Your Escrow on the Blockchain
+
+Want to see your escrow on the blockchain explorer? You can!
+
+1. **Copy the transaction hash** from your console output
+2. **Visit the Xahau Testnet Explorer**: Go to https://explorer.xahau-test.net
+3. **Paste your transaction hash** in the search bar
+
+You'll see your transaction details, including:
+- The escrow amount (1 XRP)
+- The finish time (60 seconds from creation)
+- The ledger it was validated in
+- Gas fees paid (very low on XRPL!)
+
+This is real blockchain data from your test!
+
+---
+
+## Step 7: Make the Test Fail (Learning from Errors)
+
+One of the best ways to understand testing is to see what happens when things go wrong. Let's intentionally break the test:
+
+1. **Change the expected result** to something incorrect:
+
+```javascript
+// Change this line:
+expect(response.result.meta.TransactionResult).toBe("tecINSUFFICIENT_RESERVE");
+```
+
+2. **Run the test again**:
+```bash
+npx jest
+```
+
+You'll see a failure:
+
+```
+Expected: "tecINSUFFICIENT_RESERVE"
+Received: "tesSUCCESS"
+```
+
+**What this teaches you**: Jest shows exactly what you expected vs. what actually happened. In real QA, this helps you quickly identify when behavior doesn't match requirements.
+
+3. **Fix it back** to `"tesSUCCESS"` and verify it passes again.
+
+---
+
+## Step 8: Write a Second Test (Insufficient Funds)
+
+Now let's write a test that verifies failure handling. Add this second test below your first one (before the final closing `});`):
+
+```javascript
+it("should fail to create an escrow with insufficient funds", async () => {
+  const client = new xrpl.Client("wss://xahau-test.net");
+  await client.connect();
+
+  // Use your wallet
+  const wallet = xrpl.Wallet.fromSeed("sEdTM1uX8pu2do5XvTnutH6HsouMa"); // Replace with your secret
+
+  // Try to escrow MORE than account balance
+  const finishAfter = Math.floor(Date.now() / 1000) + 60;
+  const escrowTx = {
+    TransactionType: "EscrowCreate",
+    Account: wallet.address,
+    Destination: wallet.address,
+    Amount: "1000000000000", // 1 million XRP - way more than testnet balance!
+    FinishAfter: finishAfter,
+  };
+
+  // Submit and expect a failure
+  try {
+    const response = await client.submitAndWait(escrowTx, { wallet });
+    
+    // The transaction should fail, so we check for a tec result code
+    expect(response.result.meta.TransactionResult).toMatch(/^tec/);
+    console.log(`✅ Correctly rejected with: ${response.result.meta.TransactionResult}`);
+  } catch (error) {
+    // Some failures throw errors before reaching the ledger
+    console.log("✅ Transaction correctly rejected before submission");
+  }
+
+  await client.disconnect();
+}, 30000);
+```
+
+Run the tests again:
+
+```bash
+npx jest
+```
+
+You should now see **2 passing tests**! The second test validates that the network correctly rejects invalid transactions.
+
+---
+
+## What You've Learned
+
+Let's recap what you've accomplished:
+
+✅ **Set up a Jest testing environment** for XRPL  
+✅ **Connected to a live testnet** (Xahau)  
+✅ **Created and funded a test account** using the faucet  
+✅ **Wrote your first automated test** for a native XRPL feature  
+✅ **Submitted a real transaction** to the blockchain  
+✅ **Asserted on transaction results** using Jest  
+✅ **Tested both success and failure scenarios**  
+✅ **Verified your work on a blockchain explorer**
+
+---
+
+## The Path to Hooks Testing
+
+Here's the exciting part: **The exact workflow you just learned applies to testing custom Hooks!**
+
+When you're ready to test Hooks (custom smart contracts on XRPL), the process is nearly identical:
+
+1. ✅ Connect to testnet (same)
+2. ✅ Create a wallet (same)
+3. 🆕 Deploy your Hook (using `SetHook` transaction)
+4. 🆕 Invoke your Hook (by sending a transaction that triggers it)
+5. ✅ Assert on results (same pattern)
+6. ✅ Disconnect (same)
+
+The testing patterns, assertion styles, and Jest setup remain the same. You've already mastered the foundation!
+
+---
+
+## Next Steps
+
+Ready to level up? Here are some suggestions:
+
+1. **Test EscrowFinish**: Write a test that creates an escrow, waits for it to unlock, then calls `EscrowFinish` to claim the funds
+2. **Test Payment Channels**: Try testing another native XRPL feature like Payment Channels or NFTs
+3. **Explore the xrpl.js docs**: Check out https://js.xrpl.org for more transaction types
+4. **Learn Hooks**: When you're ready, explore https://hooks.xrpl.org to start building and testing custom smart contracts
+5. **Add more assertions**: Test the escrow details, check account balances before/after, verify ledger state changes
+
+---
+
+## Troubleshooting
+
+**Problem**: `Error: connect ECONNREFUSED`  
+**Solution**: Check your internet connection and verify the Xahau Testnet is online at https://xahau-test.net
+
+**Problem**: `tecINSUFFICIENT_RESERVE` error  
+**Solution**: Your test account needs more XRP. Visit the faucet again to get more testnet funds.
+
+**Problem**: `temBAD_FEE` error  
+**Solution**: The network may be busy. Try running the test again—xrpl.js will auto-calculate appropriate fees.
+
+**Problem**: `Test timeout exceeded`  
+**Solution**: Network responses can be slow. We've already set a 30-second timeout, but you can increase it if needed by changing the timeout value at the end of your test.
+
+---
+
+## Verification
+
+Want to make sure you did everything correctly? Here's a checklist:
+
+- [ ] `package.json` exists with jest and xrpl as dependencies
+- [ ] `escrow.test.js` exists with at least one test
+- [ ] Running `npx jest` shows "1 passed" or more
+- [ ] Console shows "✅ Escrow created successfully!"
+- [ ] You can find your transaction on https://explorer.xahau-test.net
+
+If you checked all boxes: **You're officially a Native XRPL tester!** 🎊
+
+---
+
+## Summary
+
+In this tutorial, you learned the complete workflow for testing Native XRPL features:
+
+- Set up Jest and xrpl.js in a Node.js project
+- Connected to the Xahau Testnet
+- Created test accounts using the faucet
+- Wrote automated tests for XRPL transactions
+- Submitted real transactions to a live testnet
+- Used Jest assertions to verify transaction results
+- Explored transactions on a blockchain explorer
+
+This is the **exact same foundation** you'll use for testing custom Hooks, payment applications, NFT platforms, and any other XRPL-based system. You've taken the first step into professional Web3 QA for the Native XRP Ledger ecosystem!
+
+**Ready for more?** Check out our [Native XRPL Testing Toolkit](/tools/native-xrpl-testing-toolkit) for a comprehensive guide to all the tools in the ecosystem, or explore [XRPL's Two Testing Universes](/concepts/xrpl-testing-ecosystem-guide) to understand the full picture of XRPL testing.
+
+Happy testing! 🧪✨

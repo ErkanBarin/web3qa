@@ -97,7 +97,7 @@ const mdxComponents = {
   ),
   pre: ({ children, ...props }) => (
     <div className="my-6">
-      <pre className="bg-gray-900 dark:bg-gray-950 text-gray-100 p-6 rounded-xl overflow-x-auto border border-gray-200 dark:border-gray-700 shadow-lg" {...props}>
+      <pre className="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100 p-6 rounded-xl overflow-x-auto border border-gray-300 dark:border-gray-700 shadow-lg" {...props}>
         {children}
       </pre>
     </div>
@@ -107,14 +107,14 @@ const mdxComponents = {
       return <code className={className} {...props}>{children}</code>;
     }
     return (
-      <code className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 px-2 py-1 rounded text-sm font-mono border border-gray-200 dark:border-gray-600" {...props}>
+      <code className="bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 px-2 py-1 rounded text-sm font-mono border border-gray-300 dark:border-gray-600" {...props}>
         {children}
       </code>
     );
   },
   blockquote: ({ children, ...props }) => (
-    <blockquote className="border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-950/20 pl-6 py-4 my-6 rounded-r-lg" {...props}>
-      <div className="text-blue-900 dark:text-blue-100">
+    <blockquote className="border-l-4 border-blue-500 bg-blue-50 dark:bg-blue-900/30 pl-6 py-4 my-6 rounded-r-lg" {...props}>
+      <div className="text-blue-900 dark:text-blue-50">
         {children}
       </div>
     </blockquote>
@@ -161,7 +161,7 @@ export default function ArticlePage({ params }) {
           tags={doc.normalizedTags || doc.tags} 
         />
         
-        <article className="prose prose-lg prose-gray dark:prose-invert max-w-none">
+        <article className="max-w-none">
           <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-xl p-8 lg:p-12 border border-gray-200 dark:border-gray-700">
             <MDXContent components={mdxComponents} />
           </div>

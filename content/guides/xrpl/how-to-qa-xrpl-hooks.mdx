@@ -1,0 +1,408 @@
+---
+title: "How to QA Native XRPL Smart Contracts (Hooks)"
+description: "A comprehensive guide to the strategy and process for testing native XRPL Hooks on the Xahau Ledger, from setup to deployment."
+section: guides
+chain: xrpl
+tags:
+  - xrpl
+  - xahau
+  - testing
+  - guides
+  - hooks
+  - security
+lastUpdated: 2025-10-29
+draft: false
+---
+
+# How to QA Native XRPL Smart Contracts (Hooks)
+
+Testing Hooks on the Xahau Ledger represents a paradigm shift for developers coming from the EVM ecosystem. Unlike Solidity contracts deployed on Ethereum, Hooks are native smart contracts written in C or Rust, compiled to WebAssembly, and executed directly by the XRPL protocol. This guide outlines the strategic approach to QA for this unique testing environment.
+
+> **🔗 New to XRPL Testing?** Start with our [XRPL Testing Ecosystem Guide](/concepts/xrpl-testing-ecosystem-guide) to understand the fundamental differences between Native XRPL and EVM sidechain testing.
+
+---
+
+## Understanding the Hooks Testing Landscape
+
+Before diving into the testing strategy, it's important to understand what makes Hooks testing different:
+
+**What Are Hooks?**  
+Hooks are small, efficient smart contracts that "hook into" XRPL transactions. When a transaction occurs on an account with an installed Hook, the Hook executes automatically, allowing it to:
+- Accept or reject the transaction
+- Modify transaction outcomes
+- Update account state
+- Trigger additional transactions
+
+**Key Differences from EVM Testing:**
+- **No Local Blockchain Fork**: You test against live testnets (Xahau Testnet) or a local `xahaud` node
+- **Wasm Binary Deployment**: Your Hook is compiled to WebAssembly before deployment
+- **Transaction-Driven Testing**: Tests simulate real transactions that trigger Hook execution
+- **Limited Tooling Maturity**: Automated security analysis tools are still emerging
+
+---
+
+## Step 1: Setting Up Your Test Environment
+
+A proper Hooks testing environment requires three core components:
+
+### 1. **Test Runner**: Jest or Similar Framework
+Jest provides the test structure, assertions, and reporting you need for automated testing. It's the same tool you'd use for any JavaScript testing, making it familiar for web developers.
+
+### 2. **Client Library**: xrpl.js
+The official JavaScript library for interacting with the XRP Ledger. This handles:
+- WebSocket connections to the ledger
+- Transaction signing and submission
+- Account management
+- Result parsing
+
+### 3. **Test Ledger**: Local xahaud or Xahau Testnet
+- **Local xahaud**: A full XRPL node running on your machine for fast, isolated testing
+- **Xahau Testnet**: The public test network for integration and pre-deployment testing
+
+> **📚 Setup Details**: Our [Native XRPL Testing Toolkit](/tools/native-xrpl-testing-toolkit) provides complete installation instructions for all three components, including Docker configurations for xahaud.
+
+**Verification Checklist:**
+- [ ] Jest installed and configured
+- [ ] xrpl.js library available in your project
+- [ ] Local xahaud node running OR access to Xahau Testnet
+- [ ] Test wallets funded with testnet XRP
+
+---
+
+## Step 2: Static Analysis & Code Review (The Critical Manual Step)
+
+Let's be honest: **automated security tooling for Hooks is not as mature as Slither for Solidity**. This is the reality of working with cutting-edge technology.
+
+### What This Means for Your QA Process
+
+**Manual code review is your primary security defense.** You cannot rely solely on automated tools to catch vulnerabilities in Hooks written in Rust or C.
+
+### Your Manual Review Checklist
+
+When reviewing Hook code, focus on these critical areas:
+
+**1. Transaction Validation Logic**
+- Does the Hook correctly identify transaction types?
+- Are all edge cases handled (partial payments, multi-sig, etc.)?
+- Can an attacker craft a transaction that bypasses checks?
+
+**2. State Management**
+- How does the Hook read and write state?
+- Are there race conditions in state updates?
+- Can state be corrupted by malicious input?
+
+**3. Resource Limits**
+- Does the Hook respect the execution budget?
+- Are there unbounded loops that could cause timeouts?
+- Is memory usage within Wasm constraints?
+
+**4. Authorization Checks**
+- Does the Hook verify the transaction sender correctly?
+- Are privilege escalation attacks possible?
+- Can unauthorized accounts trigger critical Hook functions?
+
+**5. Integer Arithmetic**
+- Are there potential overflow/underflow issues?
+- Are currency amounts handled safely?
+- Is precision maintained in calculations?
+
+### Emerging Tools
+
+While not as comprehensive as EVM tooling, these resources can assist:
+- **XRPL Hooks Builder**: IDE with syntax highlighting and basic validation
+- **Hooks Debugger**: Command-line tool for inspecting Hook execution
+- **Community Audits**: Engage with the XRPL Hooks development community for peer review
+
+**Bottom Line**: Treat every line of Hook code as security-critical. If you're deploying a Hook that manages value, budget for a professional security audit (see Step 5).
+
+---
+
+## Step 3: Writing Unit Tests
+
+Unit tests for Hooks verify that your Hook's logic works correctly in isolation. Here's the testing pattern:
+
+### The Test Flow
+
+Your unit tests will follow this structure:
+
+```javascript
+describe('MyHook Behavior', () => {
+  it('should accept valid transactions and reject invalid ones', async () => {
+    // 1. Connect to local xahaud testnet
+    const client = new xrpl.Client("ws://localhost:6006");
+    await client.connect();
+
+    // 2. Create and fund test wallets
+    const hookAccount = xrpl.Wallet.fromSeed("sTest123...");
+    const senderAccount = xrpl.Wallet.fromSeed("sTest456...");
+
+    // 3. Deploy the compiled Hook to hookAccount
+    const setHookTx = {
+      TransactionType: "SetHook",
+      Account: hookAccount.address,
+      Hooks: [{
+        Hook: {
+          CreateCode: wasmHexString, // Your compiled Hook
+          HookOn: "0000000000000000", // Trigger conditions
+          HookNamespace: namespace,
+          HookApiVersion: 0
+        }
+      }]
+    };
+    await client.submitAndWait(setHookTx, { wallet: hookAccount });
+
+    // 4. Send a transaction designed to trigger the Hook
+    const paymentTx = {
+      TransactionType: "Payment",
+      Account: senderAccount.address,
+      Destination: hookAccount.address,
+      Amount: "1000000" // 1 XRP
+    };
+    const result = await client.submitAndWait(paymentTx, { wallet: senderAccount });
+
+    // 5. Assert the outcome
+    expect(result.result.meta.TransactionResult).toBe("tesSUCCESS");
+    
+    // 6. Verify Hook-specific effects
+    const accountInfo = await client.request({
+      command: "account_info",
+      account: hookAccount.address
+    });
+    expect(accountInfo.result.account_data.Balance).toBe(expectedBalance);
+
+    await client.disconnect();
+  });
+});
+```
+
+### What You're Testing
+
+**Transaction Acceptance/Rejection**
+- Does the Hook accept transactions that meet criteria?
+- Does it reject invalid transactions?
+- Are the rejection codes correct (`tecHOOK_REJECTED`, etc.)?
+
+**State Changes**
+- Did the Hook update its state correctly?
+- Are Hook state objects (HookState) persisted as expected?
+- Can you read back the state after the transaction?
+
+**Transaction Modifications**
+- If the Hook modifies the transaction, are changes correct?
+- Are emitted transactions (via `emit()`) formed properly?
+- Do side effects occur in the right order?
+
+### Test Data Strategy
+
+Create comprehensive test scenarios:
+- **Happy path**: Normal, expected transactions
+- **Edge cases**: Zero amounts, maximum amounts, boundary values
+- **Invalid input**: Malformed data, wrong transaction types
+- **Attack scenarios**: Re-entrancy attempts, overflow exploits, unauthorized access
+
+---
+
+## Step 4: Integration Testing
+
+Integration tests verify that your Hook works correctly with other native XRPL features and accounts.
+
+### What Integration Testing Covers
+
+**Hook-to-Hook Interactions**
+- If multiple accounts have Hooks, do they interact correctly?
+- Can one Hook trigger another?
+- Are state changes synchronized?
+
+**Native XRPL Features**
+- **Escrow**: Can your Hook interact with time-locked XRP?
+- **Payment Channels**: Does your Hook handle channel claims?
+- **Trust Lines**: Can your Hook manage IOU currencies?
+- **NFTs**: Does your Hook work with NFToken minting/burning?
+- **Checks**: Can your Hook interact with the Checks amendment?
+
+**Multi-Party Scenarios**
+- What happens when multiple signers are involved?
+- How does your Hook behave in a multisig setup?
+- Are there race conditions with concurrent transactions?
+
+### Integration Test Example
+
+```javascript
+it('should interact correctly with Escrow', async () => {
+  // 1. Create an escrow that releases to the Hook account
+  const escrowCreate = {
+    TransactionType: "EscrowCreate",
+    Account: funderAccount.address,
+    Destination: hookAccount.address,
+    Amount: "5000000",
+    FinishAfter: futureTimestamp
+  };
+  await client.submitAndWait(escrowCreate, { wallet: funderAccount });
+
+  // 2. Wait for escrow to mature (or simulate time in local testnet)
+  // ...
+
+  // 3. Finish the escrow
+  const escrowFinish = {
+    TransactionType: "EscrowFinish",
+    Account: hookAccount.address,
+    Owner: funderAccount.address,
+    OfferSequence: escrowSequence
+  };
+  const result = await client.submitAndWait(escrowFinish, { wallet: hookAccount });
+
+  // 4. Verify the Hook processed the escrow correctly
+  expect(result.result.meta.TransactionResult).toBe("tesSUCCESS");
+  // ... additional Hook state assertions
+});
+```
+
+### Integration Testing Best Practices
+
+- **Test on Xahau Testnet**: Once local tests pass, run integration tests against the public testnet
+- **Simulate Real Timing**: Use actual time delays for time-locked features
+- **Monitor Network State**: Check ledger state before and after test runs
+- **Clean Up Resources**: Delete test Hooks and close channels after tests
+
+---
+
+## Step 5: Pre-Deployment Checklist
+
+Before deploying your Hook to mainnet, complete this final QA checklist:
+
+### 1. **Comprehensive Test Coverage**
+- [ ] All unit tests pass locally
+- [ ] Integration tests pass on Xahau Testnet
+- [ ] Test coverage includes all Hook functions
+- [ ] Edge cases and failure modes are tested
+
+### 2. **Public Testnet Validation**
+- [ ] Deploy the Hook to Xahau Testnet
+- [ ] Run the full test suite against the testnet deployment
+- [ ] Monitor Hook performance under realistic load
+- [ ] Verify gas costs and execution budgets
+
+### 3. **Manual End-to-End Testing**
+- [ ] Use Xaman wallet to interact with your Hook manually
+- [ ] Test all user workflows end-to-end
+- [ ] Verify wallet displays correct transaction previews
+- [ ] Confirm transaction signing experience is smooth
+
+### 4. **Security Audit**
+- [ ] Engage a security firm that specializes in Wasm and XRPL Hooks
+- [ ] Provide auditors with full source code and test suite
+- [ ] Address all findings before mainnet deployment
+- [ ] Publish the audit report for transparency
+
+**Recommended Auditors:**
+- Firms with XRPL-specific experience
+- Auditors familiar with Rust/C and WebAssembly security
+- Teams that have audited other Hooks projects
+
+### 5. **Documentation & Monitoring**
+- [ ] Document all Hook behavior for users
+- [ ] Set up monitoring for Hook execution on mainnet
+- [ ] Prepare incident response plan
+- [ ] Establish communication channels for security disclosures
+
+---
+
+## Step 6: Mainnet Deployment Strategy
+
+### Phased Rollout Approach
+
+Don't deploy to millions of users on day one. Use a phased strategy:
+
+**Phase 1: Limited Beta (Week 1-2)**
+- Deploy Hook to a single test account
+- Invite trusted users to interact
+- Monitor closely for unexpected behavior
+
+**Phase 2: Controlled Expansion (Week 3-4)**
+- Gradually increase user access
+- Monitor performance and error rates
+- Collect feedback on user experience
+
+**Phase 3: General Availability**
+- Full public launch
+- Maintain monitoring and alerting
+- Be prepared to upgrade or disable the Hook if critical issues arise
+
+### Emergency Response Plan
+
+Have a plan for critical issues:
+- **Hook Disable**: Know how to remove the Hook from an account
+- **Transaction Blacklisting**: Understand XRPL's amendment process for emergency fixes
+- **User Communication**: Have channels ready to notify affected users
+- **Rollback Strategy**: Keep previous Hook versions available
+
+---
+
+## Testing Strategy Recap
+
+Here's your complete QA workflow for XRPL Hooks:
+
+1. **Local Development**: Write and test against local `xahaud` using Jest and xrpl.js
+2. **Manual Review**: Rigorous code review focusing on security-critical logic
+3. **Unit Testing**: Verify Hook logic in isolation with comprehensive test cases
+4. **Integration Testing**: Test Hook interactions with other XRPL features
+5. **Testnet Deployment**: Full validation on Xahau Testnet
+6. **Manual E2E**: Real-world testing with Xaman wallet
+7. **Security Audit**: Professional review by Wasm/XRPL specialists
+8. **Phased Mainnet Rollout**: Gradual deployment with continuous monitoring
+
+---
+
+## Common Pitfalls to Avoid
+
+**❌ Skipping Manual Code Review**  
+Don't rely solely on automated tests. Hooks security requires human expertise.
+
+**❌ Testing Only Happy Paths**  
+Edge cases and attack scenarios are where bugs hide. Test failure modes aggressively.
+
+**❌ Ignoring Gas Limits**  
+Hooks have execution budgets. Test that your Hook completes within limits.
+
+**❌ Deploying Without an Audit**  
+If your Hook manages value, a professional audit is not optional.
+
+**❌ No Monitoring Post-Deployment**  
+You need visibility into Hook execution on mainnet to catch issues early.
+
+---
+
+## Next Steps
+
+Ready to start testing? Here's your path forward:
+
+1. **Set Up Your Environment**: Follow our [Native XRPL Testing Toolkit](/tools/native-xrpl-testing-toolkit) guide
+2. **Learn the Basics**: Complete our [Your First XRPL Test](/tutorials/your-first-xrpl-test-jest) tutorial
+3. **Join the Community**: Connect with other Hooks developers on [XRPL Discord](https://discord.gg/xrpl)
+4. **Read the Docs**: Study the [official Hooks documentation](https://xrpl-hooks.readme.io/)
+
+---
+
+## Additional Resources
+
+- [XRPL Hooks Documentation](https://xrpl-hooks.readme.io/): Official technical reference
+- [Xahau Ledger](https://xahau.network/): The first Hooks-enabled XRPL network
+- [xrpl.js API Reference](https://js.xrpl.org/): Complete client library documentation
+- [Hooks Examples Repository](https://github.com/XRPL-Labs/xrpld-hooks): Sample Hooks implementations
+- [Xaman Wallet](https://xaman.app/): User-facing wallet for testing Hook interactions
+
+---
+
+## Summary
+
+Testing Hooks on the Xahau Ledger requires a strategic approach that balances automation with manual review:
+
+- **Automate where possible** using Jest and xrpl.js for unit and integration tests
+- **Review manually** because automated security tools are still maturing
+- **Test comprehensively** on local testnets before deploying to mainnet
+- **Audit professionally** before handling real value
+- **Monitor continuously** after deployment
+
+The tooling ecosystem is evolving rapidly, but the fundamental principle remains: **test early, test often, and never skip security review**. Your users depend on it.
+
+Happy testing! 🧪🔗

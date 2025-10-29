@@ -1,0 +1,383 @@
+---
+title: "Tutorial: Testing on the XRPL EVM Sidechain with Hardhat"
+description: "A quick guide on how to use the standard Ethereum toolkit (Hardhat) to test smart contracts on the XRPL EVM Sidechain."
+section: tutorials
+chain: xrpl
+tags:
+  - xrpl
+  - evm
+  - tutorial
+  - hardhat
+  - solidity
+lastUpdated: 2025-10-29
+draft: false
+---
+
+# Tutorial: Testing on the XRPL EVM Sidechain with Hardhat
+
+Great news! **The XRPL EVM Sidechain is 100% compatible with Ethereum.** This means you don't need to learn a completely new testing stack. You will use the exact same tools you're already familiar with from Ethereum development:
+
+- **Solidity** for smart contracts
+- **Hardhat** for development and testing
+- **Ethers.js** for blockchain interactions
+
+The XRPL EVM Sidechain provides an Ethereum Virtual Machine (EVM) environment that runs alongside the XRP Ledger, giving you the best of both worlds: Ethereum's mature tooling ecosystem and XRPL's performance and features.
+
+---
+
+## What You'll Learn
+
+In this tutorial, you'll discover:
+
+- How to reuse your existing Ethereum testing knowledge for XRPL EVM
+- How to configure Hardhat to connect to the XRPL EVM Testnet
+- Where to get testnet funds for development
+- How to run your tests on the XRPL EVM Sidechain
+
+> **💡 Key Insight**: If you already know how to test on Ethereum, you already know 95% of what you need for XRPL EVM. The only difference is network configuration!
+
+---
+
+## Prerequisites
+
+Before you begin, make sure you have:
+
+- Basic understanding of Ethereum smart contract development
+- Node.js (version 16 or higher) installed
+- Familiarity with Hardhat (if not, we'll guide you!)
+- A code editor (VS Code recommended)
+
+---
+
+## Step 1: Follow the Main Hardhat Tutorial
+
+Since the XRPL EVM Sidechain uses the exact same development environment as Ethereum, the first step is to follow our comprehensive Hardhat tutorial to:
+
+1. Set up a new Hardhat project
+2. Write a smart contract in Solidity
+3. Create comprehensive tests using JavaScript or TypeScript
+4. Understand the testing workflow
+
+**👉 [Follow our full guide: "Your First Web3 Test: A Beginner's Tutorial to Setting Up Hardhat"](/tutorials/your-first-web3-test-hardhat)**
+
+This tutorial will walk you through:
+- Installing Hardhat and dependencies
+- Creating a sample contract
+- Writing unit tests with Mocha and Chai
+- Running tests locally
+- Understanding assertions and test patterns
+
+Complete that tutorial first, then come back here for the XRPL-specific configuration.
+
+---
+
+## Step 2: Add the XRPL EVM Network to Hardhat
+
+The **only difference** between testing on Ethereum and testing on XRPL EVM is the network configuration. You need to tell Hardhat how to connect to the XRPL EVM Sidechain.
+
+### Network Configuration
+
+Open your `hardhat.config.js` (or `hardhat.config.ts` if using TypeScript) file and add the XRPL EVM Testnet network configuration:
+
+```javascript
+// hardhat.config.js
+require("@nomicfoundation/hardhat-toolbox");
+require("dotenv").config();
+
+module.exports = {
+  solidity: "0.8.19", // Your Solidity version
+  
+  networks: {
+    // Your existing networks (hardhat, localhost, etc.)
+    hardhat: {
+      // Local Hardhat Network
+    },
+    
+    // Add the XRPL EVM Testnet
+    xrplEVMTestnet: {
+      url: "https://rpc.testnet.xrplevm.org",
+      chainId: 1440002,
+      accounts: [`0x${process.env.PRIVATE_KEY}`] // Your private key from .env
+    }
+  }
+};
+```
+
+### Important Configuration Details
+
+- **RPC URL**: `https://rpc.testnet.xrplevm.org` is the official XRPL EVM Testnet endpoint
+- **Chain ID**: `1440002` is the unique identifier for XRPL EVM Testnet
+- **Accounts**: Load your private key from environment variables for security
+
+### Setting Up Environment Variables
+
+Create a `.env` file in your project root (if you don't have one already):
+
+```bash
+PRIVATE_KEY=your_private_key_here_without_0x_prefix
+```
+
+**🔒 Security Note**: 
+- Never commit your `.env` file to version control
+- Add `.env` to your `.gitignore` file
+- Only use testnet private keys (never mainnet keys)
+- Generate a new wallet specifically for testing
+
+### Verifying Your Configuration
+
+To verify your network configuration is correct, run:
+
+```bash
+npx hardhat console --network xrplEVMTestnet
+```
+
+If the connection succeeds, you'll see the Hardhat console prompt. Type `.exit` to leave.
+
+---
+
+## Step 3: Get Testnet Funds
+
+Before you can deploy contracts or run tests that interact with the blockchain, you need test XRP for the EVM sidechain.
+
+### Using the Official Faucet
+
+1. **Visit the XRPL EVM Sidechain Faucet**: [https://faucet.xrplevm.org/](https://faucet.xrplevm.org/)
+
+2. **Connect Your Wallet** or **Paste Your Address**: 
+   - You can use MetaMask or another Web3 wallet
+   - Make sure to switch to the XRPL EVM Testnet network first
+   - Or simply paste your wallet address directly
+
+3. **Request Testnet XRP**: Click the button to receive test tokens
+
+4. **Wait for Confirmation**: The faucet will send test XRP to your address (usually takes a few seconds)
+
+### Getting Your Wallet Address
+
+If you need to find your wallet address from your private key:
+
+```bash
+npx hardhat console
+```
+
+Then in the console:
+```javascript
+const [signer] = await ethers.getSigners();
+console.log("Your address:", signer.address);
+```
+
+### Checking Your Balance
+
+To verify you received the testnet funds:
+
+```bash
+npx hardhat console --network xrplEVMTestnet
+```
+
+Then:
+```javascript
+const [signer] = await ethers.getSigners();
+const balance = await ethers.provider.getBalance(signer.address);
+console.log("Balance:", ethers.formatEther(balance), "XRP");
+```
+
+---
+
+## Step 4: Run Your Tests on XRPL EVM
+
+Now that you have your network configured and testnet funds, you can run all your standard Hardhat commands on the XRPL EVM Sidechain!
+
+### Running Tests
+
+To run your tests on the XRPL EVM Testnet, simply add the `--network` flag:
+
+```bash
+npx hardhat test --network xrplEVMTestnet
+```
+
+This will execute all your tests against the live XRPL EVM Testnet.
+
+### Deploying Contracts
+
+To deploy your contracts to XRPL EVM Testnet:
+
+```bash
+npx hardhat run scripts/deploy.js --network xrplEVMTestnet
+```
+
+### Running Scripts
+
+Any Hardhat script can target the XRPL EVM network:
+
+```bash
+npx hardhat run scripts/interact.js --network xrplEVMTestnet
+```
+
+### Verifying Contracts
+
+To verify your contract on the XRPL EVM block explorer:
+
+```bash
+npx hardhat verify --network xrplEVMTestnet DEPLOYED_CONTRACT_ADDRESS "Constructor arg 1" "Constructor arg 2"
+```
+
+---
+
+## Understanding the Workflow
+
+Here's the complete testing workflow for XRPL EVM Sidechain:
+
+1. **Local Development**: Write and test locally first
+   ```bash
+   npx hardhat test
+   ```
+
+2. **Deploy to Testnet**: Deploy to XRPL EVM Testnet
+   ```bash
+   npx hardhat run scripts/deploy.js --network xrplEVMTestnet
+   ```
+
+3. **Run Integration Tests**: Test against live testnet
+   ```bash
+   npx hardhat test --network xrplEVMTestnet
+   ```
+
+4. **Verify on Explorer**: Check your contract on [XRPL EVM Explorer](https://explorer.xrplevm.org/)
+
+---
+
+## Differences from Native XRPL Testing
+
+It's important to understand the distinction between the XRPL EVM Sidechain and the Native XRP Ledger:
+
+| Aspect | XRPL EVM Sidechain | Native XRPL |
+|--------|-------------------|-------------|
+| **Language** | Solidity | N/A (native transactions) |
+| **Tooling** | Hardhat, Ethers.js, Truffle | xrpl.js, Jest |
+| **Testing Style** | Unit tests with Mocha/Chai | Integration tests with live testnet |
+| **Smart Contracts** | EVM smart contracts | Hooks (native smart contracts) |
+| **Compatibility** | 100% Ethereum-compatible | Native XRPL protocol |
+
+**When to use each:**
+- **XRPL EVM**: When you want to use existing Solidity contracts or Ethereum tooling
+- **Native XRPL**: When you need native XRPL features (Escrow, Payment Channels, NFTs) or want to write Hooks
+
+> **🔗 Related Tutorial**: Want to test native XRPL features instead? Check out [Your First XRPL Test: QA a Native Escrow with Jest & xrpl.js](/tutorials/your-first-xrpl-test-jest)
+
+---
+
+## Common Commands Cheat Sheet
+
+Here are the most common commands you'll use:
+
+```bash
+# Run tests locally (Hardhat Network)
+npx hardhat test
+
+# Run tests on XRPL EVM Testnet
+npx hardhat test --network xrplEVMTestnet
+
+# Deploy to XRPL EVM Testnet
+npx hardhat run scripts/deploy.js --network xrplEVMTestnet
+
+# Check account balance
+npx hardhat console --network xrplEVMTestnet
+# Then: ethers.provider.getBalance(address)
+
+# Verify contract
+npx hardhat verify --network xrplEVMTestnet CONTRACT_ADDRESS
+
+# Run a specific test file
+npx hardhat test test/MyContract.test.js --network xrplEVMTestnet
+```
+
+---
+
+## Troubleshooting
+
+### Problem: "Network connection error" or "Failed to connect"
+
+**Solution**: 
+- Verify your RPC URL is correct: `https://rpc.testnet.xrplevm.org`
+- Check your internet connection
+- The testnet might be temporarily down - check [XRPL status page](https://xrpl.org/)
+
+### Problem: "Insufficient funds for gas"
+
+**Solution**: 
+- Visit the faucet again to get more testnet XRP: [https://faucet.xrplevm.org/](https://faucet.xrplevm.org/)
+- Check your balance to confirm you received the funds
+
+### Problem: "Invalid private key"
+
+**Solution**: 
+- Ensure your private key in `.env` has no `0x` prefix
+- Verify the private key is valid (64 hexadecimal characters)
+- Make sure your `.env` file is in the project root
+
+### Problem: Tests work locally but fail on testnet
+
+**Solution**: 
+- Testnet transactions are slower than local tests - increase timeout values
+- Network conditions can vary - add retry logic for critical operations
+- Gas prices might differ - ensure your transactions have sufficient gas
+
+---
+
+## Best Practices
+
+1. **Test Locally First**: Always run tests on the local Hardhat Network before deploying to testnet
+   
+2. **Use Descriptive Test Names**: Make it clear what each test validates
+   
+3. **Separate Unit and Integration Tests**: Keep local unit tests separate from testnet integration tests
+   
+4. **Handle Gas Properly**: Always estimate gas and add a buffer for testnet deployments
+   
+5. **Use Environment Variables**: Never hardcode private keys or RPC URLs
+   
+6. **Test Edge Cases**: Network delays, failed transactions, and reverts are more common on live networks
+   
+7. **Monitor Testnet Funds**: Keep track of your testnet XRP balance to avoid running out during long test sessions
+
+---
+
+## Next Steps
+
+Now that you know how to test on the XRPL EVM Sidechain, here are some suggestions for further learning:
+
+1. **Explore XRPL-Specific Features**: Learn about bridging assets between XRPL and XRPL EVM
+2. **Test More Complex Contracts**: Try deploying DeFi protocols or NFT contracts
+3. **Integrate with XRPL Native**: Explore how XRPL EVM interacts with native XRPL features
+4. **Learn Hooks**: Dive into native XRPL smart contracts with our [XRPL Hooks Guide](/guides/xrpl/how-to-qa-xrpl-hooks)
+5. **Join the Community**: Connect with other developers building on XRPL
+
+---
+
+## Additional Resources
+
+- **XRPL EVM Documentation**: [https://docs.xrplevm.org/](https://docs.xrplevm.org/)
+- **XRPL EVM Block Explorer**: [https://explorer.xrplevm.org/](https://explorer.xrplevm.org/)
+- **XRPL EVM Faucet**: [https://faucet.xrplevm.org/](https://faucet.xrplevm.org/)
+- **Hardhat Documentation**: [https://hardhat.org/docs](https://hardhat.org/docs)
+- **XRPL Developer Portal**: [https://xrpl.org/](https://xrpl.org/)
+- **XRPL Foundation**: [https://foundation.xrpl.org/](https://foundation.xrpl.org/)
+
+---
+
+## Summary
+
+You've learned how to leverage your existing Ethereum testing knowledge to test smart contracts on the XRPL EVM Sidechain:
+
+- ✅ The XRPL EVM Sidechain is 100% Ethereum-compatible
+- ✅ Use the same tools: Hardhat, Ethers.js, Solidity
+- ✅ Only network configuration changes are needed
+- ✅ Get testnet funds from the official faucet
+- ✅ Run tests with the `--network xrplEVMTestnet` flag
+- ✅ All standard Hardhat commands work on XRPL EVM
+
+The XRPL EVM Sidechain bridges the gap between Ethereum's mature ecosystem and XRPL's unique features, giving you the flexibility to choose the right tool for your project!
+
+**Ready to explore more?** Check out our [Essential Web3 Testing Toolkit](/tools/essential-toolkit) for a comprehensive overview of testing tools across all chains, or dive into [Native XRPL testing with Hooks](/guides/xrpl/how-to-qa-xrpl-hooks) to explore XRPL's native smart contract capabilities.
+
+Happy testing! 🧪✨
