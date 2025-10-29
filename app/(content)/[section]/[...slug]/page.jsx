@@ -2,12 +2,13 @@ import React from 'react';
 import ArticleMeta from '../../../../components/ArticleMeta.jsx';
 import ReadingProgress from '../../../../components/ReadingProgress.jsx';
 import TableOfContents from '../../../../components/TableOfContents.jsx';
+import Quiz from '../../../../components/Quiz.jsx';
 import { notFound } from 'next/navigation';
 import { getArticleBySlug } from '../../../../lib/contentlayer-helpers.js';
 import { useMDXComponent } from 'next-contentlayer/hooks';
 import Link from 'next/link';
 // Contentlayer generated imports via relative path (Next.js app directory)
-import { allArticles, allGlossaryTerms } from '../../../../.contentlayer/generated';
+import { allArticles } from '../../../../.contentlayer/generated';
 
 // Function to generate heading IDs
 const generateId = (text) => {
@@ -128,6 +129,7 @@ const mdxComponents = {
       {children}
     </em>
   ),
+  Quiz: Quiz,
 };
 
 export default function ArticlePage({ params }) {
@@ -138,7 +140,7 @@ export default function ArticlePage({ params }) {
 
   // Fallback: attempt to match glossary by slug if section === 'glossary'
   const glossaryHit = !article && section === 'glossary'
-    ? allGlossaryTerms.find(t => t.slug === slug)
+    ? allArticles.find(t => t.section?.toLowerCase() === 'glossary' && t.slug === slug)
     : null;
   const doc = article || glossaryHit;
 

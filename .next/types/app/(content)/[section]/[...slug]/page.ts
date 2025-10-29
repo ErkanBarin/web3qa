@@ -1,8 +1,8 @@
-// File: /Users/erkan.barin/web3qa/app/page.jsx
-import * as entry from '../../../app/page.js'
+// File: /Users/erkanbarin/web3qa/app/(content)/[section]/[...slug]/page.jsx
+import * as entry from '../../../../../../app/(content)/[section]/[...slug]/page.js'
 import type { ResolvingMetadata } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
-type TEntry = typeof import('../../../app/page.js')
+type TEntry = typeof import('../../../../../../app/(content)/[section]/[...slug]/page.js')
 
 // Check that the entry is a valid entry
 checkFields<Diff<{

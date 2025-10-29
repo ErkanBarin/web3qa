@@ -1,4 +1,4 @@
-// File: /Users/erkan.barin/web3qa/app/(content)/[section]/page.jsx
+// File: /Users/erkanbarin/web3qa/app/(content)/[section]/page.jsx
 import * as entry from '../../../../../app/(content)/[section]/page.js'
 import type { ResolvingMetadata } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

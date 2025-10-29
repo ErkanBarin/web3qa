@@ -111,7 +111,61 @@ Place above the line triggering the detection. Re-run `npm run validate`.
 ## 13. Next Steps (Implementation)
 Follow `tasks.md` starting at Phase 1 test scaffolds (T009+). All design contracts now present for T002–T006 dependencies.
 
-## 14. Revision Log
+## 14. Interactive Quiz Feature (Added 2025-10-29)
+
+### Overview
+The Quiz component adds interactive knowledge testing capability to MDX content pages.
+
+### Component Location
+- **File**: `/Users/erkanbarin/web3qa/components/Quiz.jsx`
+- **Type**: React client component ('use client')
+- **Styling**: Tailwind CSS dark-mode theme
+
+### Usage in MDX
+```jsx
+import Quiz from '@/components/Quiz.jsx'
+
+export const myQuiz = [
+  {
+    question: "Your question text?",
+    answers: ["Option A", "Option B", "Option C"],
+    correctAnswer: 1  // 0-based index
+  }
+];
+
+<Quiz questions={myQuiz} />
+```
+
+### Features
+- **Interactive Selection**: Click to select answers
+- **Immediate Feedback**: Correct (green) or Incorrect (red) shown instantly
+- **Answer Reveal**: Correct answer highlighted if wrong answer selected
+- **Accessibility**: Keyboard navigation, ARIA labels, focus states
+- **Dark Mode**: Styled with dark backgrounds (bg-gray-900) and light text
+
+### Example Implementation
+See: `/Users/erkanbarin/web3qa/content/guides/ethereum/how-to-qa-a-smart-contract.mdx`
+
+### Testing the Quiz
+1. Start dev server: `npm run dev`
+2. Navigate to: `http://localhost:3000/guides/ethereum/how-to-qa-a-smart-contract`
+3. Scroll to "🧠 Test Your Knowledge" section
+4. Verify:
+   - Questions display correctly
+   - Answer selection works
+   - Feedback appears (green for correct, red for incorrect)
+   - Correct answer is highlighted after selection
+   - Keyboard navigation works (Tab, Enter)
+   - Dark mode styling is consistent
+
+### Constitutional Compliance
+- ✅ **Simplicity**: Single component, no external dependencies
+- ✅ **Test-First**: Enhances testing/learning content
+- ✅ **Accessibility**: WCAG AA compliant (keyboard, ARIA, contrast)
+- ✅ **Performance**: Client component, minimal bundle impact
+
+## 15. Revision Log
 | Date (UTC) | Change | Author |
 |------------|--------|--------|
+| 2025-10-29 | Added interactive Quiz component | copilot |
 | 2025-10-06 | Initial draft | copilot |

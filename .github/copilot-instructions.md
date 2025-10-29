@@ -19,6 +19,7 @@ tests/
 : Follow standard conventions
 
 ## Recent Changes
+- 001-site-shell-content: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 - 001-site-shell-content: Added
 
 <!-- MANUAL ADDITIONS START -->

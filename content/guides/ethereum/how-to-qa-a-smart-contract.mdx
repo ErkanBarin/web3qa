@@ -11,6 +11,7 @@ tags:
 lastUpdated: 2025-10-07
 draft: false
 ---
+
 # How to QA a Smart Contract: A Step-by-Step Guide
 
 ## Introduction
@@ -462,3 +463,37 @@ Effective smart contract QA requires a multi-layered approach combining automate
 - **DeFi Safety**: Real-world examples of testing failures and lessons learned
 
 Remember: In Web3, thorough testing isn't just about quality—it's about security, trust, and protecting user assets. The time invested in comprehensive QA pays dividends in prevented incidents and user confidence.
+
+## 🧠 Test Your Knowledge
+
+export const guideQuiz = [
+  {
+    question: "What is the main purpose of the 'Checks-Effects-Interactions' pattern?",
+    answers: [
+      "To make code run faster.",
+      "To prevent reentrancy attacks by updating state *before* an external call.",
+      "To check for gas optimization."
+    ],
+    correctAnswer: 1
+  },
+  {
+    question: "Which tool is best for deep security analysis, even though it's not pure JavaScript?",
+    answers: [
+      "Solhint",
+      "Playwright",
+      "Slither"
+    ],
+    correctAnswer: 2
+  },
+  {
+    question: "What Hardhat command lets you test time-locked features by fast-forwarding the blockchain clock?",
+    answers: [
+      "npx hardhat test --parallel",
+      "npx hardhat evm_increaseTime",
+      "npx hardhat check"
+    ],
+    correctAnswer: 1
+  }
+];
+
+<Quiz questions={guideQuiz} />

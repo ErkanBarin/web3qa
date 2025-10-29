@@ -8,7 +8,7 @@ import patterns__smartContractTestingPatternsMdx from './patterns__smart-contrac
 import references__curatedWeb3TestingResourcesMdx from './references__curated-web3-testing-resources.mdx.json' assert { type: 'json' }
 import tools__essentialToolkitMdx from './tools__essential-toolkit.mdx.json' assert { type: 'json' }
 import tutorials__yourFirstWeb3TestHardhatMdx from './tutorials__your-first-web3-test-hardhat.mdx.json' assert { type: 'json' }
-import guides__ethereum__howToQaASmartContractMdx from './guides__ethereum__how-to-qa-a-smart-contract.mdx.json' assert { type: 'json' }
 import tools__ethereum__experimentalToolMdx from './tools__ethereum__experimental-tool.mdx.json' assert { type: 'json' }
+import guides__ethereum__howToQaASmartContractMdx from './guides__ethereum__how-to-qa-a-smart-contract.mdx.json' assert { type: 'json' }
 
-export const allArticles = [aboutMdx, concepts__theGreatDivideWhyWeb3TestingIsDifferentMdx, faq__web3TestingFaqMdx, glossary__web3QaGlossaryMdx, patterns__smartContractTestingPatternsMdx, references__curatedWeb3TestingResourcesMdx, tools__essentialToolkitMdx, tutorials__yourFirstWeb3TestHardhatMdx, guides__ethereum__howToQaASmartContractMdx, tools__ethereum__experimentalToolMdx]
+export const allArticles = [aboutMdx, concepts__theGreatDivideWhyWeb3TestingIsDifferentMdx, faq__web3TestingFaqMdx, glossary__web3QaGlossaryMdx, patterns__smartContractTestingPatternsMdx, references__curatedWeb3TestingResourcesMdx, tools__essentialToolkitMdx, tutorials__yourFirstWeb3TestHardhatMdx, tools__ethereum__experimentalToolMdx, guides__ethereum__howToQaASmartContractMdx]

@@ -110,7 +110,59 @@ Not a persisted file—constructed to render homepage and section counts.
 Computation: reduce over published ContentItems.
 
 ---
-## 6. Validation Flow (Detailed State Transitions)
+## 6. QuizData (Added 2025-10-29)
+Represents quiz questions embedded in MDX content for interactive knowledge testing.
+
+| Field | Type | Required | Constraints / Notes | Validation |
+|-------|------|----------|---------------------|------------|
+| questions | QuizQuestion[] | yes | Array of 1+ quiz questions | MIN_LENGTH: 1 |
+
+QuizQuestion:
+| Field | Type | Required | Constraints / Notes | Validation |
+|-------|------|----------|---------------------|------------|
+| question | string | yes | Question text; 10-500 chars | LENGTH_RANGE |
+| answers | string[] | yes | 2-6 answer options | MIN_LENGTH: 2, MAX_LENGTH: 6 |
+| correctAnswer | number | yes | 0-based index into answers array | RANGE: 0 to answers.length-1 |
+
+### Usage Pattern
+Defined inline in MDX as JavaScript constant and passed to Quiz component:
+
+```jsx
+export const myQuiz = [
+  {
+    question: "What is X?",
+    answers: ["A", "B", "C"],
+    correctAnswer: 1
+  }
+];
+
+<Quiz questions={myQuiz} />
+```
+
+### State Management
+- **Component State**: React useState tracks per-question state
+- **Question State**: `{ isAnswered: boolean, selectedIndex: number | null }`
+- **No Persistence**: Educational context; state resets on page reload
+- **Client-Side Only**: Interactive component, no server-side state
+
+### Validation Rules
+- `correctAnswer` must be valid index (0 ≤ correctAnswer < answers.length)
+- Duplicate answers allowed but discouraged
+- Question and answer text should be unique within quiz
+- No HTML in question/answer strings (plain text only)
+
+### Test IDs
+| Aspect | Test ID | Description |
+|--------|---------|-------------|
+| Answer selection | TID-QUIZ-SELECT | User can select answer |
+| Immediate feedback | TID-QUIZ-FEEDBACK | Correct/incorrect shown on selection |
+| Correct answer reveal | TID-QUIZ-REVEAL | Correct answer highlighted after wrong selection |
+| Disabled state | TID-QUIZ-DISABLED | Can't re-select after answering |
+| Keyboard navigation | TID-QUIZ-A11Y-KBD | Tab/Enter navigation works |
+| ARIA attributes | TID-QUIZ-A11Y-ARIA | Proper aria-pressed, aria-disabled |
+
+---
+## 7. Validation Flow (Detailed State Transitions)
 1. Raw MDX → parse frontmatter → provisional ContentItem.
 2. Normalize & basic schema check (collect errors).
 3. Glossary extraction (if section == glossary or path prefix) create GlossaryTerm candidate.
@@ -122,7 +174,19 @@ Computation: reduce over published ContentItems.
 9. Emit ValidationReport.
 
 ---
-## 7. Traceability Seeds (Entity ↔ Test IDs)
+## 7. Validation Flow (Detailed State Transitions)
+1. Raw MDX → parse frontmatter → provisional ContentItem.
+2. Normalize & basic schema check (collect errors).
+3. Glossary extraction (if section == glossary or path prefix) create GlossaryTerm candidate.
+4. Deduplicate glossary (mark non-primary + warning).
+5. Secret scan raw body (errors or allowed secret if annotated).
+6. Derive computed fields (wordCount, readingTimeMin, canonicalUrl, openGraph).
+7. Filter excluded items (draft || errors).
+8. Compute contentHash over remaining.
+9. Emit ValidationReport.
+
+---
+## 8. Traceability Seeds (Entity ↔ Test IDs)
 | Entity Field / Aspect | Test ID | Description |
 |-----------------------|---------|-------------|
 | slug normalization | TID-CI-SLUG-RULE | ensures transformation rules applied |
@@ -131,23 +195,30 @@ Computation: reduce over published ContentItems.
 | filter serialization order | TID-FS-SERIAL | ensures canonical order |
 | secret detection | TID-CI-SECRET-SCAN | pattern detection integrity |
 | content hash stability | TID-VR-HASH-STABLE | stable across unrelated reorders |
+| quiz answer selection | TID-QUIZ-SELECT | user can select answer |
+| quiz feedback | TID-QUIZ-FEEDBACK | immediate feedback on selection |
+| quiz accessibility | TID-QUIZ-A11Y-KBD | keyboard navigation |
 
 ---
-## 8. Implementation Notes
+## 9. Implementation Notes
 - Schemas: likely Zod for concise validation; fallback to manual functions if bundle concerns.
 - Contentlayer Computed Fields: implement inside `defineDocumentType` using `computedFields` for slug, wordCount, etc.
 - Performance: Avoid expansive regex for mnemonic initially—heuristic acceptable; refine after false positive review.
+- Quiz Component: Client-side React component with local state; no server-side rendering needed.
 
 ---
-## 9. Open Items / Future Enhancements
+## 10. Open Items / Future Enhancements
 | Topic | Note |
 |-------|------|
 | Multi-locale support | Introduce locale field; would affect contentHash composition |
 | Versioning | Potential `version` field to support historical docs |
 | Extended Metadata | Social image generation pipeline placeholder |
+| Quiz Analytics | Track completion rates (deferred - privacy considerations) |
+| Quiz Explanations | Add optional explanation field for incorrect answers |
 
 ---
-## 10. Revision Log
+## 11. Revision Log
 | Date (UTC) | Change | Author |
 |------------|--------|--------|
+| 2025-10-29 | Added QuizData entity and test IDs | copilot |
 | 2025-10-06 | Initial draft | copilot |
