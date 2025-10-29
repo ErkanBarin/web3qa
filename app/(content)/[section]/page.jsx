@@ -6,8 +6,8 @@ import { getAllBySection } from '../../../lib/contentlayer-helpers.js';
 import ListingFilters from '../../../components/ListingFilters.jsx';
 
 const SECTIONS = ['guides','tools','concepts','patterns','tutorials','glossary','references','faq'];
-const CHAINS = ['ethereum','arbitrum','optimism','polygon','base','avalanche'];
-const TAGS = ['testing','security','tooling','guides','glossary','architecture','best-practices','performance','about','qa','web3','blockchain'];
+const CHAINS = ['ethereum','arbitrum','optimism','polygon','base','avalanche','xrpl'];
+const TAGS = ['testing','security','tooling','guides','glossary','architecture','best-practices','performance','about','qa','web3','blockchain','xrpl','hooks','evm','xahau','jest','xaman'];
 
 function normalize(value, list) {
   if (!value) return null;

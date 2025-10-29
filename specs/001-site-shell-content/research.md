@@ -15,8 +15,9 @@ Consolidate canonical enumerations, validation heuristics, performance & accessi
 | polygon | Polygon PoS | Sidechain/L2 hybrid |
 | base | Base | Coinbase L2 |
 | avalanche | Avalanche | C-Chain; treat as EVM-compatible |
+| xrpl | XRP Ledger | Includes native XRPL (Hooks) and EVM Sidechain; testnet references only |
 
-Rationale: Focus on widely-used EVM ecosystems minimizing fragmentation while maintaining breadth for tooling examples.
+Rationale: Focus on widely-used EVM ecosystems minimizing fragmentation while maintaining breadth for tooling examples. XRPL added 2025-10-29 to support dual-universe testing content (native + EVM sidechain).
 
 ### 1.2 Allowed Tags (initial scope – single-select UI for chain, single tag filter)
 | Tag | Category | Notes |
@@ -29,6 +30,12 @@ Rationale: Focus on widely-used EVM ecosystems minimizing fragmentation while ma
 | architecture | topic | System & protocol design |
 | best-practices | topic | Prescriptive recommendations |
 | performance | topic | Gas optimization, runtime efficiency |
+| xrpl | chain-specific | XRP Ledger related content |
+| hooks | chain-specific | XRPL Hooks (native smart contracts) |
+| evm | chain-specific | EVM-compatible chains and tools |
+| xahau | chain-specific | Xahau Ledger (XRPL Hooks implementation) |
+| jest | tooling-specific | Jest testing framework |
+| xaman | tooling-specific | Xaman wallet (formerly XUMM) |
 
 Normalization Rule: lowercase kebab-case; on ingest, trim, lowercase, collapse internal whitespace to single hyphen. Unknown tags → invalid content (excluded from published listing but logged in validation report).
 

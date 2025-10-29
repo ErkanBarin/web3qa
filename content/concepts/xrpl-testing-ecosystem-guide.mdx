@@ -1,0 +1,182 @@
+---
+title: "The Two Universes of XRPL Testing: Native vs. EVM"
+description: "A foundational guide for QA engineers explaining the two different ecosystems for XRPL testing: the native ledger (Hooks) and the EVM Sidechain."
+section: concepts
+chain: xrpl
+tags:
+  - xrpl
+  - testing
+  - concepts
+  - hooks
+  - evm
+lastUpdated: 2025-10-29
+draft: false
+---
+
+# The Two Universes of XRPL Testing: Native vs. EVM
+
+## The Most Important Concept First
+
+Before you write a single test for the XRP Ledger (XRPL), you need to understand this fundamental truth: **there are two completely separate testing ecosystems on XRPL**, and they require different tools, different knowledge, and different approaches.
+
+This isn't like choosing between testing frameworks on Ethereum—this is choosing between two parallel universes with their own rules, languages, and toolchains. Getting this right from the start will save you weeks of confusion and wasted effort.
+
+## Universe 1: The Native XRPL (with Hooks)
+
+### What It Is
+
+The native XRPL is the main, original XRP Ledger blockchain. It's the battle-tested ledger that has been processing transactions since 2012. When people talk about "XRPL," they usually mean this ledger.
+
+### Smart Contracts = Hooks
+
+Unlike Ethereum where smart contracts are called "contracts," on the native XRPL they're called **Hooks**. Hooks are a relatively new addition to the XRPL ecosystem, designed to add programmable logic while maintaining the ledger's speed and efficiency.
+
+**Key characteristics:**
+- Written in languages that compile to **WebAssembly (Wasm)**: primarily **Rust** or **AssemblyScript**
+- Not Solidity—completely different paradigm
+- Execute on-ledger with deterministic behavior
+- Limited state and computation (by design for performance)
+- Triggered by transaction events
+
+### The Toolchain You'll Need
+
+Testing native XRPL with Hooks requires:
+
+1. **xrpl.js**: The official JavaScript library for interacting with XRPL
+2. **rippled in stand-alone mode**: A local XRPL node for testing
+3. **Hooks builder toolchain**: For compiling Rust/AssemblyScript to Wasm
+4. **XRPL test networks**: Hooks Testnet V3 or local stand-alone nodes
+
+**Example workflow:**
+```bash
+# You'll be working with tools like:
+npm install xrpl
+# Setting up a local rippled instance
+# Compiling Hooks with cargo (Rust) or asc (AssemblyScript)
+# Deploying Hooks using SetHook transactions
+```
+
+### When to Choose This Path
+
+Choose the native XRPL with Hooks if:
+- You need native XRPL features (escrows, payment channels, DEX)
+- You want maximum performance and low fees
+- Your use case fits the Hooks model (event-driven logic)
+- You're building on the main XRPL infrastructure
+
+## Universe 2: The XRPL EVM Sidechain
+
+### What It Is
+
+The XRPL EVM Sidechain is a **separate, parallel blockchain** that runs alongside the native XRPL. It's fully compatible with the Ethereum Virtual Machine (EVM), which means it speaks Ethereum's language.
+
+This is not a layer on top of the native XRPL—it's its own blockchain with its own blocks, validators, and state. It connects to the native XRPL via a bridge mechanism.
+
+### The Game-Changer
+
+Here's the critical insight: **All your existing Ethereum knowledge transfers directly to the XRPL EVM Sidechain.**
+
+**Everything you know about Ethereum works here:**
+- ✅ Write smart contracts in **Solidity**
+- ✅ Test with **Hardhat** or **Foundry**
+- ✅ Use **Ethers.js** or **Web3.js**
+- ✅ Deploy with **Remix**, **Truffle**, or your favorite tools
+- ✅ Debug with **Tenderly**, **Hardhat console.log**, etc.
+- ✅ All your EVM testing patterns apply
+
+### The Toolchain You Already Know
+
+If you've tested on Ethereum, you already know this stack:
+
+```bash
+# Standard Ethereum development setup
+npm install hardhat ethers @openzeppelin/contracts
+npx hardhat init
+# Your existing Hardhat tests work as-is
+npx hardhat test
+```
+
+The only difference is the RPC endpoint—you point to the XRPL EVM Sidechain instead of Ethereum mainnet or a testnet.
+
+### When to Choose This Path
+
+Choose the XRPL EVM Sidechain if:
+- You have existing Solidity contracts or EVM expertise
+- You need full EVM compatibility
+- You want to port existing Ethereum dApps
+- You prefer the mature Ethereum testing ecosystem
+- You need complex smart contract logic beyond Hooks' scope
+
+## The Bridge Between Universes
+
+The two ecosystems can communicate via a **bridge system**:
+- Transfer XRP and tokens between native XRPL and the EVM Sidechain
+- Trigger actions across chains
+- Test cross-chain workflows
+
+**Testing the bridge adds complexity:** you'll need both toolchains and an understanding of how the bridge contracts work.
+
+## Decision Framework: Which Universe to Test?
+
+Here's a quick comparison to help you choose:
+
+**Language:**
+- Native XRPL (Hooks): Rust, AssemblyScript
+- XRPL EVM Sidechain: Solidity
+
+**Learning Curve:**
+- Native XRPL (Hooks): High (new paradigm)
+- XRPL EVM Sidechain: Low (if you know EVM)
+
+**Tooling Maturity:**
+- Native XRPL (Hooks): Emerging
+- XRPL EVM Sidechain: Mature (Ethereum tools)
+
+**Performance:**
+- Native XRPL (Hooks): Fastest, lowest fees
+- XRPL EVM Sidechain: Standard EVM performance
+
+**Use Case Fit:**
+- Native XRPL (Hooks): Native XRPL features
+- XRPL EVM Sidechain: General-purpose smart contracts
+
+**Ecosystem:**
+- Native XRPL (Hooks): XRPL-native
+- XRPL EVM Sidechain: Ethereum-compatible
+
+## What This Means for Testing
+
+**For QA engineers, this dual-universe model means:**
+
+1. **Clarify the project scope first**: Which universe is your project targeting?
+2. **Set up the right environment**: Don't try to test Hooks with Hardhat or Solidity contracts with xrpl.js
+3. **Learn the right tools**: Focus your learning on the relevant toolchain
+4. **Test integration carefully**: If using the bridge, test both sides independently first
+
+## What's Next on web3qa.com
+
+We'll have dedicated, clearly marked guides for both universes:
+
+### Coming Soon: Native XRPL Testing Guides
+- Setting up rippled in stand-alone mode for testing
+- Writing and testing your first Hook
+- Best practices for Hooks testing
+- Integration testing with xrpl.js
+
+### Coming Soon: XRPL EVM Sidechain Testing Guides
+- Connecting Hardhat to the XRPL EVM Sidechain
+- Adapting Ethereum tests for the sidechain
+- Testing bridge interactions
+- Performance and gas optimization on the sidechain
+
+## Summary
+
+The XRPL is unique in offering two distinct smart contract platforms:
+
+1. **Native XRPL with Hooks**: A high-performance, event-driven model using Rust/AssemblyScript and Wasm. Requires learning new tools (xrpl.js, rippled, Hooks toolchain).
+
+2. **XRPL EVM Sidechain**: A fully Ethereum-compatible sidechain where all your EVM knowledge (Solidity, Hardhat, Ethers.js) works out of the box.
+
+Choose based on your use case, expertise, and project requirements. Both are valid paths, but mixing them up will lead to confusion. **Know which universe you're in before you start testing.**
+
+For more foundational Web3 testing concepts, explore the [concepts section](/concepts).

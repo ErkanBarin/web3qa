@@ -1,0 +1,382 @@
+---
+title: "The Xahau & Native XRPL Testing Toolkit: A QA's Guide"
+description: "A guide to the essential tools for testing native XRPL Hooks on the Xahau Ledger, including xrpl.js, Jest, xahaud, and the Xaman wallet."
+section: tools
+chain: xrpl
+tags:
+  - xrpl
+  - xahau
+  - testing
+  - tooling
+  - hooks
+  - jest
+  - xaman
+lastUpdated: 2025-10-29
+draft: false
+---
+
+# The Xahau & Native XRPL Testing Toolkit: A QA's Guide
+
+If you're testing modern **native XRPL Hooks**, you're working with the **Xahau Ledger** — a specialized sidechain built explicitly to support Hooks functionality. While the broader XRP Ledger ecosystem includes both native ledger features and the EVM Sidechain, Hooks live specifically on Xahau.
+
+This guide introduces the essential testing toolkit for QA engineers working with Xahau Hooks: the client library, test runners, local development server, and user-facing wallet. Think of this as your "getting started" stack.
+
+---
+
+## Why Focus on Xahau?
+
+The **Xahau Ledger** is a sidechain of the XRP Ledger that was purpose-built to enable **Hooks** — programmable smart contract functionality for the native XRPL environment. If you're testing Hooks, you're testing on Xahau.
+
+**Key characteristics of Xahau:**
+- Hooks are written in languages that compile to **WebAssembly (Wasm)**, primarily **Rust** or **AssemblyScript**
+- Hooks execute on-ledger with deterministic behavior
+- Xahau maintains full compatibility with core XRPL features while adding programmability
+
+For QA engineers, this means your testing stack is specifically tailored to the Xahau implementation of native XRPL Hooks.
+
+---
+
+## 1. The Client Library: xrpl.js
+
+### What It Is
+**xrpl.js** is the official JavaScript/TypeScript library for all XRPL interactions, including Xahau. It's your primary tool for:
+- Creating and managing wallets
+- Sending transactions
+- Querying ledger state
+- Interacting with Hooks
+- Subscribing to ledger events
+
+### Why It Matters for QA
+Every automated test you write for Hooks will import `xrpl.js`. It's the bridge between your test code and the Xahau ledger.
+
+**Core use cases:**
+- **Test setup:** Create test wallets, fund them from a faucet
+- **Hook deployment:** Submit `SetHook` transactions to install your Hook on-ledger
+- **Test execution:** Send transactions that trigger Hook logic
+- **Verification:** Query account states, transaction results, and ledger data to assert expected outcomes
+
+### Example: Basic xrpl.js Usage
+```javascript
+import { Client, Wallet } from 'xrpl';
+
+// Connect to Xahau testnet
+const client = new Client('wss://xahau-test.net');
+await client.connect();
+
+// Create a test wallet
+const wallet = Wallet.generate();
+
+// Fund it from the testnet faucet
+await client.fundWallet(wallet);
+
+// Send a transaction that triggers a Hook
+const payment = {
+  TransactionType: 'Payment',
+  Account: wallet.address,
+  Destination: 'rDestinationAddress...',
+  Amount: '1000000' // 1 XAH in drops
+};
+
+const result = await client.submitAndWait(payment, { wallet });
+console.log('Transaction result:', result);
+
+await client.disconnect();
+```
+
+### Installation
+```bash
+npm install xrpl
+```
+
+### Official Documentation
+- [xrpl.js GitHub](https://github.com/XRPLF/xrpl.js)
+- [XRPL Dev Portal](https://xrpl.org/docs.html)
+
+---
+
+## 2. The Test Runner: Jest (or Mocha)
+
+### What It Is
+The standard practice for testing Hooks is to use a JavaScript test runner like **Jest** or **Mocha**. These frameworks provide:
+- Test file organization and discovery
+- Assertion libraries
+- Setup/teardown lifecycle hooks
+- Async/await support for blockchain interactions
+- Clear test reporting
+
+### Why Jest for Hooks?
+Jest is the most popular choice because:
+- **Zero configuration** out of the box
+- Built-in **mocking** and **spying** capabilities
+- Excellent **TypeScript support**
+- Parallel test execution for faster runs
+- Clear, descriptive test output
+
+### Example: Jest Test Structure
+```javascript
+// hooks.test.js
+import { Client, Wallet } from 'xrpl';
+
+describe('MyHook Payment Logic', () => {
+  let client;
+  let testWallet;
+
+  beforeAll(async () => {
+    client = new Client('wss://xahau-test.net');
+    await client.connect();
+  });
+
+  afterAll(async () => {
+    await client.disconnect();
+  });
+
+  beforeEach(async () => {
+    testWallet = Wallet.generate();
+    await client.fundWallet(testWallet);
+  });
+
+  test('Hook should reject payments below minimum amount', async () => {
+    const payment = {
+      TransactionType: 'Payment',
+      Account: testWallet.address,
+      Destination: 'rHookAddress...',
+      Amount: '100' // Below minimum
+    };
+
+    const result = await client.submitAndWait(payment, { wallet: testWallet });
+    
+    expect(result.result.meta.TransactionResult).toBe('tecHOOK_REJECTED');
+  });
+
+  test('Hook should accept valid payments', async () => {
+    const payment = {
+      TransactionType: 'Payment',
+      Account: testWallet.address,
+      Destination: 'rHookAddress...',
+      Amount: '1000000' // Valid amount
+    };
+
+    const result = await client.submitAndWait(payment, { wallet: testWallet });
+    
+    expect(result.result.meta.TransactionResult).toBe('tesSUCCESS');
+  });
+});
+```
+
+### Installation
+```bash
+npm install --save-dev jest @types/jest
+```
+
+### Alternative: Mocha
+If you prefer Mocha's flexible structure:
+```bash
+npm install --save-dev mocha chai @types/mocha @types/chai
+```
+
+Both work equally well — choose based on your team's preferences.
+
+---
+
+## 3. The Local Testnet: `xahaud` in Stand-Alone Mode
+
+### What It Is
+**`xahaud`** is the core server software that powers the Xahau network. When run in **stand-alone mode**, it becomes your "Ganache equivalent" for Hooks — a private, local testnet for fast, free testing.
+
+### Why You Need This
+Public testnets are great for integration testing, but local development demands:
+- **Speed:** Instant block confirmation (no waiting for consensus)
+- **Cost:** Free transactions (no testnet faucet limitations)
+- **Control:** Full control over ledger state and time
+- **Privacy:** Test in isolation without broadcasting to public networks
+- **Reproducibility:** Deterministic environment for CI/CD pipelines
+
+### Key Features
+- Runs entirely on your machine
+- No external dependencies required
+- Supports all Hooks functionality
+- Can be reset/wiped instantly for clean test runs
+- Configurable for different testing scenarios
+
+### Installation & Setup
+The Xahau team provides pre-built binaries and Docker images:
+
+**Option 1: Direct Binary**
+```bash
+# Download from Xahau releases
+wget https://github.com/Xahau/xahaud/releases/latest/download/xahaud
+
+chmod +x xahaud
+
+# Run in stand-alone mode
+./xahaud --standalone
+```
+
+**Option 2: Docker**
+```bash
+# Pull the official image
+docker pull xahau/xahaud:latest
+
+# Run in stand-alone mode
+docker run -p 6005:6005 xahau/xahaud:latest --standalone
+```
+
+### Usage in Tests
+Your test setup connects to your local `xahaud` instance instead of a public network:
+
+```javascript
+// Point xrpl.js to your local xahaud server
+const client = new Client('ws://localhost:6005');
+await client.connect();
+```
+
+### Stand-Alone Mode Benefits
+- **Instant ledger closes:** Transactions confirm in milliseconds
+- **Pre-funded accounts:** Genesis account comes with test funds
+- **Time control:** Advance ledger time for time-based tests
+- **Full reset capability:** Wipe state between test suites
+
+### Configuration
+You can customize `xahaud` behavior with a config file (`xahaud.cfg`):
+```ini
+[server]
+port_ws_admin_local = 6005
+port_ws_public = 6006
+
+[ledger_history]
+full = true
+
+[standalone]
+enable = true
+```
+
+### Official Resources
+- [Xahau GitHub](https://github.com/Xahau/xahaud)
+- [Xahau Documentation](https://docs.xahau.network/)
+
+---
+
+## 4. The User Wallet: Xaman
+
+### What It Is
+**Xaman** (formerly known as XUMM) is the primary wallet application for the XRPL ecosystem — including Xahau. Think of it as the "MetaMask equivalent" for XRPL.
+
+### Why It Matters for QA
+While Xaman isn't a code-testing tool, it's **essential** for:
+- **Manual end-to-end testing:** Verify your Hook's behavior from a real user's perspective
+- **User experience validation:** Ensure transaction flows, signing, and confirmations work as expected
+- **Integration testing:** Test how your dApp interacts with user wallets
+- **Real-world scenarios:** Catch edge cases that automated tests might miss
+- **QR code signing:** Test mobile signing flows for web dApps
+
+### Key Features
+- **Multi-platform:** iOS, Android, and desktop
+- **Testnet support:** Switch between mainnet, testnet, and Xahau networks
+- **Transaction signing:** Secure signing with biometric authentication
+- **QR-based signing:** For web dApps without browser extensions
+- **Account management:** Multiple accounts, address books, contacts
+- **Transaction history:** Full ledger-backed transaction logs
+
+### QA Use Cases
+1. **Manual testing:** Install a Hook, then use Xaman to send payments that trigger it
+2. **Visual verification:** Confirm transaction details display correctly before signing
+3. **Error handling:** Verify failed transactions show helpful error messages
+4. **Permission flows:** Test user consent for transaction signing
+5. **Mobile-first testing:** Ensure your Hook works on mobile wallets
+
+### Installation
+- **iOS:** [App Store](https://apps.apple.com/app/xaman-xrpl-wallet/id1492302343)
+- **Android:** [Google Play](https://play.google.com/store/apps/details?id=com.xrpllabs.xumm)
+- **Desktop:** [Download from xaman.app](https://xaman.app/)
+
+### Connecting to Xahau Testnet
+1. Open Xaman
+2. Go to **Settings** → **Advanced** → **Network Settings**
+3. Select **Xahau Testnet** or configure a custom node endpoint
+4. Fund your wallet from the [Xahau Testnet Faucet](https://xahau-test.net/faucet)
+
+### Example Manual Test Flow
+1. **Deploy your Hook** using automated tests
+2. **Open Xaman** on your phone
+3. **Scan QR code** from your dApp to initiate a payment
+4. **Review transaction** details in Xaman
+5. **Sign with biometrics**
+6. **Verify Hook execution** in your dApp's UI or through xrpl.js queries
+
+### Xaman vs. MetaMask Comparison
+| Feature | Xaman (XRPL) | MetaMask (EVM) |
+|---------|--------------|----------------|
+| **Networks** | XRPL, Xahau | Ethereum, L2s, EVM chains |
+| **Signing** | QR codes + in-app | Browser extension + mobile |
+| **Smart contracts** | Hooks | Solidity contracts |
+| **Transaction fees** | XRP/XAH (drops) | Gas (wei/gwei) |
+| **Mobile-first** | Yes | Extension-first |
+
+### Official Resources
+- [Xaman Website](https://xaman.app/)
+- [Xaman Developer Docs](https://docs.xaman.app/)
+- [XRPL Dev Portal](https://xrpl.org/docs.html)
+
+---
+
+## The Complete Stack: Putting It All Together
+
+For professional **Xahau Hooks testing**, your standard setup is:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                    Your Test Suite                      │
+│                                                         │
+│   Jest (or Mocha) Test Runner                          │
+│        ↓                                                │
+│   Test Files (.test.js)                                │
+│        ↓                                                │
+│   xrpl.js Client Library                               │
+│        ↓                                                │
+├─────────────────────────────────────────────────────────┤
+│                                                         │
+│   Local Development:                                    │
+│   xahaud in Stand-Alone Mode (localhost:6005)          │
+│                                                         │
+│   Integration Testing:                                  │
+│   Xahau Testnet (wss://xahau-test.net)                 │
+│                                                         │
+│   Manual E2E Testing:                                   │
+│   Xaman Wallet (Mobile/Desktop)                        │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Typical Development Workflow
+1. **Write failing tests** using Jest + xrpl.js
+2. **Run tests locally** against `xahaud` in stand-alone mode
+3. **Develop your Hook** (Rust/AssemblyScript → Wasm)
+4. **Deploy to local xahaud** and iterate until tests pass
+5. **Deploy to Xahau Testnet** for integration testing
+6. **Manual testing** with Xaman wallet for UX verification
+7. **CI/CD pipeline** runs full test suite against fresh xahaud instance
+
+---
+
+## Summary
+
+To test **native XRPL Hooks on Xahau**, you need this toolkit:
+
+| Tool | Role | Installation |
+|------|------|--------------|
+| **xrpl.js** | Client library for all XRPL/Xahau interactions | `npm install xrpl` |
+| **Jest** | Test runner for organizing and executing tests | `npm install --save-dev jest` |
+| **xahaud** | Local Xahau server for fast, private testing | Binary or Docker image |
+| **Xaman** | User wallet for manual E2E testing | Mobile/Desktop app |
+
+This is your **"Jest + xrpl.js + xahaud"** stack — the standard, professional setup for Xahau Hooks testing. Master these tools, and you're ready to build robust, well-tested Hooks.
+
+---
+
+## Next Steps
+
+- **[The Two Universes of XRPL Testing](/concepts/xrpl-testing-ecosystem-guide)** — Understand the difference between Native XRPL/Xahau and the EVM Sidechain
+- **[Essential Web3 QA Toolkit](/tools/essential-toolkit)** — Compare with other blockchain testing tools
+- **Coming Soon:** *Setting Up Your First Xahau Hook Test Suite* — A hands-on tutorial
+
+For more tools and testing resources, explore the **[Tools section](/tools)**.
