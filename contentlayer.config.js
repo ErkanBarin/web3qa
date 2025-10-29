@@ -3,7 +3,7 @@ import crypto from 'node:crypto';
 
 // Enumerations (align with research.md)
 const CHAINS = ['ethereum','arbitrum','optimism','polygon','base','avalanche','xrpl'];
-const TAGS = ['testing','security','tooling','tools','guides','glossary','architecture','best-practices','performance','about','qa','web3','blockchain','hardhat','slither','playwright','foundry','solhint','openzeppelin','ethereum','resources','documentation','community','concepts','xrpl','hooks','evm','xahau','jest','xaman','tutorial','xrpl-js','solidity'];
+const TAGS = ['testing','security','tooling','tools','guides','glossary','architecture','best-practices','performance','about','qa','web3','blockchain','hardhat','slither','playwright','foundry','solhint','openzeppelin','ethereum','resources','documentation','community','concepts','xrpl','hooks','evm','xahau','jest','xaman','tutorial','xrpl-js','solidity','defi','advanced','oracle','flash-loan','l2','rollup','bridge','cross-chain','l0','ccip'];
 const SECTIONS = ['guides','tools','concepts','patterns','tutorials','glossary','references','faq','about'];
 
 // Helpers
