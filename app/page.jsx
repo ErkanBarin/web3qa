@@ -60,7 +60,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* EVM Focus Section */}
+        {/* Multi-Chain Focus Section */}
         <div className="mb-16 px-4">
           <div className="bg-gradient-to-r from-amber-50 via-orange-50 to-yellow-50 dark:from-amber-950/20 dark:via-orange-950/20 dark:to-yellow-950/20 rounded-2xl p-8 max-w-5xl mx-auto border border-amber-200 dark:border-amber-800/30 shadow-lg">
             <div className="flex items-start space-x-4">
@@ -71,13 +71,23 @@ export default function HomePage() {
               </div>
               <div>
                 <h2 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200 flex items-center">
-                  🌟 Beginning with the EVM Universe
+                  🌟 Multi-Chain Focus
                 </h2>
                 <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
-                  The world of Web3 is massive. To provide the most in-depth and accurate content, I'm starting with a laser focus on the <strong>Ethereum Virtual Machine (EVM) ecosystem</strong>. This includes Ethereum itself, plus all the major Layer 2s and compatible chains where the majority of developers are building today.
+                  The world of Web3 is massive. I'm building the ultimate QA resource, one ecosystem at a time.
                 </p>
+                <ul className="space-y-3 text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
+                  <li className="flex items-start">
+                    <span className="mr-2 mt-1">•</span>
+                    <span><strong>EVM Universe:</strong> The core content features in-depth guides and tutorials for the <strong>Ethereum Virtual Machine (EVM)</strong>, which covers Ethereum, Polygon, Base, Avalanche, and all compatible chains.</span>
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2 mt-1">•</span>
+                    <span><strong>Now Live - XRPL:</strong> It's expanded! Now there is a complete section dedicated to the <strong>XRP Ledger</strong>, covering both the Native Hooks (on Xahau) and the EVM Sidechain.</span>
+                  </li>
+                </ul>
                 <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                  As the site grows, I'll be rolling out dedicated content for other powerful ecosystems, including <strong>Solana, Cardano, XRPL, and more</strong>. Stay tuned! 🚀
+                  As the site grows, I'll be rolling out dedicated content for other powerful ecosystems, including <strong>Solana</strong>, <strong>Avalanche</strong>, <strong>Sui</strong>, and <strong>Cardano</strong>. Stay tuned! 🚀
                 </p>
               </div>
             </div>
