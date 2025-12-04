@@ -964,9 +964,26 @@ function Dashboard({ onLogout }) {
   }
 
   function formatElliott(elliott) {
-    if (!elliott?.currentWaveLabel) return 'N/A';
-    const struct = elliott.structure === 'impulse' ? 'Impulse' : elliott.structure === 'correction' ? 'Correction' : '';
-    return `Wave ${elliott.currentWaveLabel}${struct ? ` (${struct})` : ''}`;
+    if (!elliott) return 'N/A';
+    
+    // If we have a specific wave label (from microservice)
+    if (elliott.currentWaveLabel) {
+      const struct = elliott.structure === 'impulse' ? 'Impulse' : elliott.structure === 'correction' ? 'Correction' : '';
+      return `Wave ${elliott.currentWaveLabel}${struct ? ` (${struct})` : ''}`;
+    }
+    
+    // Use phase from local detection
+    if (elliott.phase && elliott.phase !== 'none' && elliott.confidence >= 40) {
+      const phaseLabels = {
+        'bull_impulse': 'Bull Impulse',
+        'bear_impulse': 'Bear Impulse', 
+        'correction': 'Correction',
+        'range': 'Range'
+      };
+      return phaseLabels[elliott.phase] || elliott.phase;
+    }
+    
+    return 'N/A';
   }
 }
 
