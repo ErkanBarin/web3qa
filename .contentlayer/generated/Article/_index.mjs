@@ -8,15 +8,15 @@ import concepts__xrplTestingEcosystemGuideMdx from './concepts__xrpl-testing-eco
 import faq__web3TestingFaqMdx from './faq__web3-testing-faq.mdx.json' assert { type: 'json' }
 import glossary__web3QaGlossaryMdx from './glossary__web3-qa-glossary.mdx.json' assert { type: 'json' }
 import patterns__smartContractTestingPatternsMdx from './patterns__smart-contract-testing-patterns.mdx.json' assert { type: 'json' }
+import references__curatedWeb3TestingResourcesMdx from './references__curated-web3-testing-resources.mdx.json' assert { type: 'json' }
 import tools__essentialToolkitMdx from './tools__essential-toolkit.mdx.json' assert { type: 'json' }
 import tools__nativeXrplTestingToolkitMdx from './tools__native-xrpl-testing-toolkit.mdx.json' assert { type: 'json' }
 import tutorials__howToTestXrplEvmSidechainMdx from './tutorials__how-to-test-xrpl-evm-sidechain.mdx.json' assert { type: 'json' }
 import tutorials__yourFirstWeb3TestHardhatMdx from './tutorials__your-first-web3-test-hardhat.mdx.json' assert { type: 'json' }
 import tutorials__yourFirstXrplTestJestMdx from './tutorials__your-first-xrpl-test-jest.mdx.json' assert { type: 'json' }
-import references__curatedWeb3TestingResourcesMdx from './references__curated-web3-testing-resources.mdx.json' assert { type: 'json' }
+import guides__xrpl__howToQaXrplHooksMdx from './guides__xrpl__how-to-qa-xrpl-hooks.mdx.json' assert { type: 'json' }
 import guides__ethereum__howToQaASmartContractMdx from './guides__ethereum__how-to-qa-a-smart-contract.mdx.json' assert { type: 'json' }
 import guides__ethereum__howToTestForOracleManipulationMdx from './guides__ethereum__how-to-test-for-oracle-manipulation.mdx.json' assert { type: 'json' }
-import guides__xrpl__howToQaXrplHooksMdx from './guides__xrpl__how-to-qa-xrpl-hooks.mdx.json' assert { type: 'json' }
 import tools__ethereum__experimentalToolMdx from './tools__ethereum__experimental-tool.mdx.json' assert { type: 'json' }
 
-export const allArticles = [aboutMdx, concepts__qaGuideToCrossChainBridgesMdx, concepts__qaGuideToLayer_2RollupsMdx, concepts__theGreatDivideWhyWeb3TestingIsDifferentMdx, concepts__xrplTestingEcosystemGuideMdx, faq__web3TestingFaqMdx, glossary__web3QaGlossaryMdx, patterns__smartContractTestingPatternsMdx, tools__essentialToolkitMdx, tools__nativeXrplTestingToolkitMdx, tutorials__howToTestXrplEvmSidechainMdx, tutorials__yourFirstWeb3TestHardhatMdx, tutorials__yourFirstXrplTestJestMdx, references__curatedWeb3TestingResourcesMdx, guides__ethereum__howToQaASmartContractMdx, guides__ethereum__howToTestForOracleManipulationMdx, guides__xrpl__howToQaXrplHooksMdx, tools__ethereum__experimentalToolMdx]
+export const allArticles = [aboutMdx, concepts__qaGuideToCrossChainBridgesMdx, concepts__qaGuideToLayer_2RollupsMdx, concepts__theGreatDivideWhyWeb3TestingIsDifferentMdx, concepts__xrplTestingEcosystemGuideMdx, faq__web3TestingFaqMdx, glossary__web3QaGlossaryMdx, patterns__smartContractTestingPatternsMdx, references__curatedWeb3TestingResourcesMdx, tools__essentialToolkitMdx, tools__nativeXrplTestingToolkitMdx, tutorials__howToTestXrplEvmSidechainMdx, tutorials__yourFirstWeb3TestHardhatMdx, tutorials__yourFirstXrplTestJestMdx, guides__xrpl__howToQaXrplHooksMdx, guides__ethereum__howToQaASmartContractMdx, guides__ethereum__howToTestForOracleManipulationMdx, tools__ethereum__experimentalToolMdx]
