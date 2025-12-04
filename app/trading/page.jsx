@@ -523,39 +523,64 @@ function Dashboard({ onLogout }) {
 
   useEffect(() => { loadData(); }, [loadData]);
 
-  // Chart initialization
+  // Chart initialization - with better error handling and stability
+  const [chartReady, setChartReady] = useState(false);
+  
   useEffect(() => {
-    if (!data?.candles || typeof window === 'undefined') return;
+    if (!data?.candles || !data.candles.length || typeof window === 'undefined') return;
+    
+    // Small delay to ensure container is rendered
+    const timer = setTimeout(() => {
+      import('lightweight-charts').then((LWC) => {
+        if (!chartContainerRef.current) return;
+        
+        // Clean up existing chart
+        if (chartRef.current) {
+          try { chartRef.current.remove(); } catch(e) {}
+          chartRef.current = null;
+        }
 
-    import('lightweight-charts').then((LWC) => {
-      if (!chartContainerRef.current) return;
-      if (chartRef.current) chartRef.current.remove();
+        try {
+          const container = chartContainerRef.current;
+          const width = container.clientWidth || 800;
+          
+          const chart = LWC.createChart(container, {
+            layout: { background: { type: 'solid', color: '#161b22' }, textColor: '#8b949e' },
+            grid: { vertLines: { color: '#21262d' }, horzLines: { color: '#21262d' } },
+            rightPriceScale: { borderColor: '#30363d' },
+            timeScale: { borderColor: '#30363d', timeVisible: true },
+            width: width,
+            height: 400,
+          });
 
-      const chart = LWC.createChart(chartContainerRef.current, {
-        layout: { background: { type: 'solid', color: '#161b22' }, textColor: '#8b949e' },
-        grid: { vertLines: { color: '#21262d' }, horzLines: { color: '#21262d' } },
-        rightPriceScale: { borderColor: '#30363d' },
-        timeScale: { borderColor: '#30363d', timeVisible: true },
-        width: chartContainerRef.current.clientWidth,
-        height: 400,
-      });
+          const series = chart.addSeries(LWC.CandlestickSeries, {
+            upColor: '#238636', downColor: '#da3633',
+            borderUpColor: '#238636', borderDownColor: '#da3633',
+            wickUpColor: '#238636', wickDownColor: '#da3633',
+          });
 
-      const series = chart.addSeries(LWC.CandlestickSeries, {
-        upColor: '#238636', downColor: '#da3633',
-        borderUpColor: '#238636', borderDownColor: '#da3633',
-        wickUpColor: '#238636', wickDownColor: '#da3633',
-      });
+          const chartData = data.candles.map(c => ({
+            time: c.time.split('T')[0],
+            open: c.open, high: c.high, low: c.low, close: c.close,
+          }));
+          
+          series.setData(chartData);
+          chart.timeScale().fitContent();
+          chartRef.current = chart;
+          setChartReady(true);
+        } catch (err) {
+          console.error('Chart init error:', err);
+        }
+      }).catch(err => console.error('Failed to load chart library:', err));
+    }, 100);
 
-      const chartData = data.candles.map(c => ({
-        time: c.time.split('T')[0],
-        open: c.open, high: c.high, low: c.low, close: c.close,
-      }));
-      series.setData(chartData);
-      chart.timeScale().fitContent();
-      chartRef.current = chart;
-    });
-
-    return () => { if (chartRef.current) chartRef.current.remove(); };
+    return () => {
+      clearTimeout(timer);
+      if (chartRef.current) {
+        try { chartRef.current.remove(); } catch(e) {}
+        chartRef.current = null;
+      }
+    };
   }, [data?.candles]);
 
   // Resize handler
@@ -646,8 +671,12 @@ function Dashboard({ onLogout }) {
                 {currentPrice ? `${formatPrice(currentPrice)} (${priceChange >= 0 ? '+' : ''}${priceChange.toFixed(2)}%)` : 'Loading...'}
               </span>
             </div>
-            <div ref={chartContainerRef} className="chart-container">
-              {loading && <div className="loading"><div className="spinner"></div></div>}
+            <div ref={chartContainerRef} className="chart-container" style={{ minHeight: '400px', position: 'relative' }}>
+              {(loading || (!chartReady && data?.candles)) && (
+                <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', color: '#8b949e' }}>
+                  Loading chart...
+                </div>
+              )}
             </div>
           </div>
 
