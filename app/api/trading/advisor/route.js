@@ -8,13 +8,19 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const symbol = searchParams.get('symbol') || 'BTC';
   const profile = searchParams.get('profile') || 'swing';
+  const radar = searchParams.get('radar');
   
   // The advisor server URL - Railway deployment
   const advisorUrl = process.env.ADVISOR_API_URL || 'https://web-production-588f2.up.railway.app';
   const accessToken = process.env.ADVISOR_ACCESS_TOKEN || 'advisor2025secure';
   
   try {
-    const res = await fetch(`${advisorUrl}/api/advisor?symbol=${symbol}&profile=${profile}`, {
+    // If radar=true, fetch the radar endpoint
+    const endpoint = radar === 'true' 
+      ? `${advisorUrl}/api/radar?profile=${profile}`
+      : `${advisorUrl}/api/advisor?symbol=${symbol}&profile=${profile}`;
+    
+    const res = await fetch(endpoint, {
       headers: {
         'Accept': 'application/json',
         'x-access-token': accessToken,

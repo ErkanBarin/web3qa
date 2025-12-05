@@ -27,13 +27,174 @@ const styles = `
     min-height: 100vh;
   }
 
+  /* Radar Pane (Asset Sidebar) */
+  .radar-pane {
+    position: fixed;
+    left: 0;
+    top: 60px;
+    bottom: 0;
+    width: 220px;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+    overflow-y: auto;
+    z-index: 100;
+    transition: transform 0.3s ease;
+  }
+
+  .radar-pane.collapsed {
+    transform: translateX(-220px);
+  }
+
+  .radar-toggle {
+    position: fixed;
+    left: 220px;
+    top: 70px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-left: none;
+    border-radius: 0 6px 6px 0;
+    padding: 0.5rem;
+    cursor: pointer;
+    z-index: 101;
+    transition: left 0.3s ease;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+  }
+
+  .radar-toggle.collapsed {
+    left: 0;
+  }
+
+  .radar-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .radar-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .radar-refresh {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    min-height: auto;
+  }
+
+  .radar-list {
+    padding: 0.5rem;
+  }
+
+  .radar-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 0.25rem;
+  }
+
+  .radar-item:hover {
+    background: var(--bg-tertiary);
+  }
+
+  .radar-item.active {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--accent-blue);
+  }
+
+  .radar-item-left {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .radar-symbol {
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  .radar-price {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+  }
+
+  .radar-change {
+    font-size: 0.7rem;
+  }
+
+  .radar-change.positive { color: var(--accent-green); }
+  .radar-change.negative { color: var(--accent-red); }
+
+  .radar-score {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+  }
+
+  .radar-score-value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+  }
+
+  .radar-score-value.high { background: var(--accent-green); color: white; }
+  .radar-score-value.medium { background: var(--accent-yellow); color: black; }
+  .radar-score-value.low { background: var(--accent-red); color: white; }
+
+  .radar-bias {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+  }
+
+  .radar-macro {
+    padding: 0.75rem;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-tertiary);
+  }
+
+  .radar-macro-title {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    margin-bottom: 0.5rem;
+  }
+
+  .radar-macro-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .radar-macro-value {
+    font-weight: 600;
+  }
+
   .advisor-header {
     background: var(--bg-secondary);
     border-bottom: 1px solid var(--border-color);
     padding: 1rem 2rem;
+    padding-left: calc(220px + 2rem);
     display: flex;
     align-items: center;
     justify-content: space-between;
+    transition: padding-left 0.3s ease;
+  }
+
+  .advisor-header.radar-collapsed {
+    padding-left: 2rem;
   }
 
   .advisor-logo {
@@ -76,11 +237,155 @@ const styles = `
     gap: 1.5rem;
     padding: 1.5rem 2rem;
     max-width: 1800px;
-    margin: 0 auto;
+    margin-left: 220px;
+    margin-right: auto;
+    transition: margin-left 0.3s ease;
+  }
+
+  .advisor-main.radar-collapsed {
+    margin-left: auto;
+  }
+
+  @media (max-width: 1400px) {
+    .advisor-main { grid-template-columns: 1fr 350px; }
   }
 
   @media (max-width: 1200px) {
-    .advisor-main { grid-template-columns: 1fr; }
+    .advisor-main { 
+      grid-template-columns: 1fr;
+      margin-left: 0;
+    }
+    .advisor-header {
+      padding-left: 2rem;
+    }
+    .radar-pane {
+      transform: translateX(-220px);
+    }
+    .radar-toggle {
+      left: 0;
+    }
+  }
+
+  /* Mobile styles */
+  @media (max-width: 768px) {
+    .advisor-header {
+      padding: 0.75rem 1rem;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    
+    .advisor-logo {
+      font-size: 1.25rem;
+    }
+
+    .advisor-controls {
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .advisor-controls select {
+      flex: 1;
+      min-width: 100px;
+    }
+
+    .advisor-controls button {
+      flex: 1;
+      min-width: 80px;
+    }
+
+    .advisor-main {
+      padding: 0.75rem;
+      gap: 0.75rem;
+    }
+
+    .chart-container {
+      min-height: 250px !important;
+    }
+
+    .indicators-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 0.5rem;
+    }
+
+    .indicator-item {
+      padding: 0.5rem;
+    }
+
+    .indicator-label {
+      font-size: 0.55rem;
+    }
+
+    .indicator-value {
+      font-size: 0.8rem;
+    }
+
+    .cards-grid-3 {
+      grid-template-columns: 1fr !important;
+    }
+
+    .section-header {
+      padding: 0.75rem 1rem;
+    }
+
+    .section-title {
+      font-size: 0.9rem;
+    }
+
+    .tf-row {
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 0.25rem;
+    }
+
+    .tf-label, .tf-value {
+      font-size: 0.7rem;
+    }
+
+    .advice-card {
+      padding: 1rem;
+    }
+
+    .score-row {
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .score-item {
+      flex: 1 1 45%;
+      min-width: 80px;
+      padding: 0.5rem;
+    }
+
+    .score-label {
+      font-size: 0.6rem;
+    }
+
+    .score-value {
+      font-size: 1rem;
+    }
+
+    .key-levels {
+      gap: 0.75rem;
+      padding: 0.75rem;
+    }
+
+    .level-item {
+      font-size: 0.8rem;
+    }
+
+    .outlook-row {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .outlook-label {
+      font-size: 0.75rem;
+    }
+
+    .outlook-value {
+      text-align: left;
+      font-size: 0.8rem;
+    }
   }
 
   .card {
@@ -505,6 +810,8 @@ function Dashboard({ onLogout }) {
   const [profile, setProfile] = useState('swing');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [radarData, setRadarData] = useState(null);
+  const [radarCollapsed, setRadarCollapsed] = useState(typeof window !== 'undefined' && window.innerWidth <= 1200);
   const chartContainerRef = useRef(null);
   const chartRef = useRef(null);
 
@@ -522,6 +829,23 @@ function Dashboard({ onLogout }) {
   }, [symbol, profile]);
 
   useEffect(() => { loadData(); }, [loadData]);
+
+  // Load radar data
+  const loadRadar = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/trading/advisor?radar=true&profile=${profile}`);
+      const json = await res.json();
+      if (!json.error) setRadarData(json);
+    } catch (err) {
+      console.error('Radar error:', err);
+    }
+  }, [profile]);
+
+  useEffect(() => {
+    loadRadar();
+    const interval = setInterval(loadRadar, 5 * 60 * 1000); // Refresh every 5 min
+    return () => clearInterval(interval);
+  }, [loadRadar]);
 
   // Chart initialization - with better error handling and stability
   const [chartReady, setChartReady] = useState(false);
@@ -610,7 +934,19 @@ function Dashboard({ onLogout }) {
 
   const getQualityClass = (v) => v >= 60 ? 'quality-high' : v >= 40 ? 'quality-medium' : 'quality-low';
 
-  const formatPrice = (p) => p ? `$${p.toLocaleString()}` : 'N/A';
+  const formatPrice = (p) => {
+    if (!p) return 'N/A';
+    if (p >= 1000) return `$${p.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+    if (p >= 1) return `$${p.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    return `$${p.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 6 })}`;
+  };
+
+  const toggleRadar = () => setRadarCollapsed(!radarCollapsed);
+
+  const selectRadarAsset = (sym) => {
+    setSymbol(sym);
+    if (window.innerWidth <= 1200) setRadarCollapsed(true);
+  };
 
   const feature4h = data?.features?.find(f => f.timeframe === '4h');
   const feature1d = data?.features?.find(f => f.timeframe === '1d');
@@ -633,7 +969,58 @@ function Dashboard({ onLogout }) {
     <div className="advisor-page">
       <style>{styles}</style>
 
-      <header className="advisor-header">
+      {/* Radar Pane */}
+      <div className={`radar-pane ${radarCollapsed ? 'collapsed' : ''}`}>
+        <div className="radar-header">
+          <span className="radar-title">📡 ASSET RADAR</span>
+          <button className="radar-refresh" onClick={loadRadar} title="Refresh radar">🔄</button>
+        </div>
+        {radarData?.fearGreed && (
+          <div className="radar-macro">
+            <div className="radar-macro-title">MARKET CONTEXT</div>
+            <div className="radar-macro-row">
+              <span>Fear & Greed:</span>
+              <span className="radar-macro-value">{radarData.fearGreed}</span>
+            </div>
+            <div className="radar-macro-row">
+              <span>Risk Mode:</span>
+              <span className="radar-macro-value">{radarData.riskMode || '--'}</span>
+            </div>
+          </div>
+        )}
+        <div className="radar-list">
+          {radarData?.assets?.map((asset) => {
+            const scoreClass = asset.compositeScore >= 65 ? 'high' : asset.compositeScore >= 50 ? 'medium' : 'low';
+            const changeClass = asset.change24h >= 0 ? 'positive' : 'negative';
+            const changeSign = asset.change24h >= 0 ? '+' : '';
+            const isActive = asset.symbol === symbol;
+            return (
+              <div 
+                key={asset.symbol} 
+                className={`radar-item ${isActive ? 'active' : ''}`}
+                onClick={() => selectRadarAsset(asset.symbol)}
+              >
+                <div className="radar-item-left">
+                  <span className="radar-symbol">{asset.symbol}</span>
+                  <span className="radar-price">{formatPrice(asset.price)}</span>
+                  <span className={`radar-change ${changeClass}`}>{changeSign}{asset.change24h?.toFixed(2) ?? '0.00'}%</span>
+                </div>
+                <div className="radar-score">
+                  <span className={`radar-score-value ${scoreClass}`}>{asset.compositeScore?.toFixed(1) || '--'}</span>
+                  <span className="radar-bias">{asset.bias}</span>
+                </div>
+              </div>
+            );
+          }) || <div style={{ padding: '1rem', color: 'var(--text-secondary)', textAlign: 'center' }}>Loading...</div>}
+        </div>
+      </div>
+
+      {/* Radar Toggle Button */}
+      <button className={`radar-toggle ${radarCollapsed ? 'collapsed' : ''}`} onClick={toggleRadar}>
+        {radarCollapsed ? '▶' : '◀'}
+      </button>
+
+      <header className={`advisor-header ${radarCollapsed ? 'radar-collapsed' : ''}`}>
         <div className="advisor-logo">
           <span>📊</span>
           <span>Crypto Advisor</span>
@@ -661,7 +1048,7 @@ function Dashboard({ onLogout }) {
         </div>
       </header>
 
-      <main className="advisor-main">
+      <main className={`advisor-main ${radarCollapsed ? 'radar-collapsed' : ''}`}>
         <div className="left-section">
           {/* Price Chart */}
           <div className="card">
