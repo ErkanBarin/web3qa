@@ -1,16 +1,31 @@
-node_modules
-.env.local
-.env
+# Dependencies
+node_modules/
+
+# Env (keep examples only)
+.env.*
+!.env.example
+
+# Next.js
 .next/
-SECURITY_AUDIT_REPORT.md
+out/
+
+# Logs / OS / IDE
+*.log
+.DS_Store
+.vscode/
+.idea/
 
 # Test artifacts (can contain screenshots/traces)
 test-results/
 playwright-report/
 
+# Coverage
+coverage/
+
 # Generated/local artifacts
 validation-report.json
 temp_content.md
+SECURITY_AUDIT_REPORT.md
 
-# Local MCP assets (keep out of repo)
+# MCP config/assets (prefer template committed instead)
 .playwright-mcp/
