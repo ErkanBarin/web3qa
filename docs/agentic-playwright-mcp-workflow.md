@@ -56,3 +56,10 @@ If it fails, open the Playwright trace (or rerun with trace retention) and itera
 - Keep at least one small spec “always green” and easy to read (`golden-demo`).
 - Prefer stable selectors (`data-test`), roles, and headings over deep CSS selectors.
 - Make failures actionable: console errors, clear assertions, minimal branching.
+
+## Guardrails (what I never let the agent do)
+
+- Never introduce random waits; prefer deterministic signals.
+- Never add brittle selectors; prefer roles/`data-test`.
+- Never paste secrets into prompts.
+- Always re-run the targeted spec + a nearby suite before commit.

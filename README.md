@@ -1,8 +1,8 @@
 # web3qa (Web3 QA / Quality Engineering site)
 
-- **What it is:** A Next.js + MDX knowledge base for Web3 QA, with a pragmatic Quality Engineering toolchain (content validation, secret scanning, unit + e2e tests).
-- **Who it’s for:** SDETs / QEs who build automation across UI + APIs and want to level up on Web3 reliability + AI-era testing workflows.
-- **What to look at (fast):** `tests/e2e/golden-demo.spec.js`, `docs/agentic-playwright-mcp-workflow.md`, `scripts/validate-content.mjs`.
+- **What it is:** Next.js + MDX knowledge base + QA toolchain (unit, e2e, validation, secret hygiene).
+- **Proof:** `tests/e2e/golden-demo.spec.js` + `docs/agentic-playwright-mcp-workflow.md`.
+- **Run it:** (below)
 
 **60-second: run tests**
 
@@ -62,6 +62,8 @@ I’m focused on AI-era Quality Engineering: faster test authoring, LLM-assisted
 ## Security / secret hygiene
 
 - Real credentials must live in `.env.local` (ignored by git). Start from `.env.example`.
+- Never commit: `test-results/`, traces, screenshots, `.env.local`, wallet keys, seed phrases.
+- If you enable `/trading`: use a dummy password locally; don’t store real credentials in repo or Vercel.
 - Recommended before sharing/CI: run a local secret scanner.
 
 ```bash
@@ -100,6 +102,6 @@ Open `http://localhost:3000`.
 
 ## Trading dashboard (optional)
 
-There’s a password-protected `/trading` route for a small “QE meets product” demo. Setup notes:
+There’s a password-protected `/trading` route for a small “QE meets product” demo. This is a UI demo only (no real trading keys, no exchange integrations in this repo). Setup notes:
 
 - `docs/trading-setup.md`
