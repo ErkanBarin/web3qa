@@ -2,3 +2,15 @@ node_modules
 .env.local
 .env
 .next/
+SECURITY_AUDIT_REPORT.md
+
+# Test artifacts (can contain screenshots/traces)
+test-results/
+playwright-report/
+
+# Generated/local artifacts
+validation-report.json
+temp_content.md
+
+# Local MCP assets (keep out of repo)
+.playwright-mcp/

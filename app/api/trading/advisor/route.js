@@ -12,7 +12,14 @@ export async function GET(request) {
   
   // The advisor server URL - Railway deployment
   const advisorUrl = process.env.ADVISOR_API_URL || 'https://web-production-588f2.up.railway.app';
-  const accessToken = process.env.ADVISOR_ACCESS_TOKEN || 'advisor2025secure';
+  const accessToken = process.env.ADVISOR_ACCESS_TOKEN;
+  
+  if (!accessToken) {
+    return NextResponse.json(
+      { error: 'ADVISOR_ACCESS_TOKEN environment variable is not configured' },
+      { status: 500 }
+    );
+  }
   
   try {
     // If radar=true, fetch the radar endpoint
